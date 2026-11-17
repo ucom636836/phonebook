@@ -63,6 +63,27 @@ footer{font-size:12px;color:var(--muted);text-align:center;padding:0 16px 24px}
 .lock button{margin-top:12px;width:100%;font-size:16px;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer}
 .lock button:disabled{opacity:.6}
 .lock .err{color:#c62828;font-size:14px;min-height:20px;margin-top:8px}
+.chip{font:inherit;font-size:14px;line-height:inherit}
+.tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.tools button,.dbtn button,.edit .del{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer}
+.tools button.pri,.dbtn button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.tools #btnSet{margin-left:auto}
+.msg{white-space:pre-line;font-size:13px;margin-top:6px;color:var(--accent)}
+.msg.bad{color:#c62828}
+.card.edit{padding:10px 12px}
+.edit .erow{display:flex;gap:8px;margin-bottom:6px}
+.edit label,#tokbox label{flex:1;min-width:0;display:block;font-size:12px;color:var(--muted)}
+.edit label span{display:block;margin-bottom:2px}
+.edit input,#tokbox input{width:100%;font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)}
+.edit .del{color:#c62828;margin-top:2px}
+dialog{max-width:440px;width:calc(100% - 32px);border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);padding:16px}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 8px;font-size:17px}
+.help{font-size:13px;color:var(--muted);margin:0 0 12px}
+#tokbox label{margin-bottom:10px;position:relative}
+#tokbox em{font-style:normal;color:var(--accent)}
+#tokbox .link{position:absolute;right:0;top:-2px;border:0;background:none;color:#c62828;font-size:12px;cursor:pointer}
+.dbtn{display:flex;gap:8px;justify-content:flex-end}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -74,54 +95,95 @@ footer{font-size:12px;color:var(--muted);text-align:center;padding:0 16px 24px}
   <div class="err" id="err" role="alert"></div>
 </form>
 <header id="hdr" hidden>
-  <h1>國防部主計局電話查詢 <small>製表 115.11.16</small></h1>
+  <h1>國防部主計局電話查詢 <small id="date"></small></h1>
   <div class="search" id="search" hidden>
     <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="電話、分機或姓名" aria-label="搜尋">
     <button id="clear" type="button" aria-label="清除" hidden>×</button>
   </div>
+  <div class="tools">
+    <button id="btnEdit" type="button">✎ 編輯</button>
+    <span id="ebar" hidden><button id="btnSave" type="button" class="pri">儲存</button><button id="btnCancel" type="button">取消</button><button id="btnAdd" type="button">＋新增一筆</button></span>
+    <button id="btnSet" type="button" aria-label="設定權杖" title="GitHub 權杖設定">⚙</button>
+  </div>
+  <div class="msg" id="msg" role="status" hidden></div>
   <nav class="chips" id="chips" aria-label="單位"></nav>
   <div class="status" id="status"></div>
 </header>
+<datalist id="ulist"></datalist>
 <main id="list" hidden></main>
-<footer>資料來源：國防部主計局電話使用一覽表（115.11.16）。分機為軍線；手機與「☎」市話可直接點擊撥打。</footer>
+<dialog id="settings">
+  <h3>GitHub 權杖設定</h3>
+  <p class="help">存檔時用來把修改寫回網站。權杖只存在這支裝置的瀏覽器，每個 repo 要用<b>該 repo 擁有者帳號</b>建立：GitHub → Settings → Developer settings → Fine-grained tokens，「Repository access」只選該 repo，「Permissions → Contents」設為 Read and write，並設定有效期限。</p>
+  <div id="tokbox"></div>
+  <div class="dbtn"><button id="tokSave" type="button" class="pri">儲存</button><button id="tokClose" type="button">關閉</button></div>
+</dialog>
+<footer>分機為軍線；手機與「☎」市話可直接點擊撥打。</footer>
 
 <script>
-const PAYLOAD = "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";
+const PAYLOAD = "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";
 const ITER = 600000;
+// 存檔時會把加密後的 index.html 寫回這些 repo（各 repo 需要各自的 GitHub 權杖）
+const TARGETS = [
+  {repo:"ucom636836/phonebook", branch:"main", path:"index.html"},
+  {repo:"boc636836-cell/phone", branch:"claude/zen-cerf-0tb31f", path:"index.html"},
+];
+const PAY_RE = /const PAYLOAD = "([A-Za-z0-9+\/=]+)";/;
+const ITER_RE = /const ITER = (\d+);/;
 const $ = id => document.getElementById(id);
+const enc = new TextEncoder(), dec = new TextDecoder();
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const toB64 = u8 => { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
 
-async function decrypt(pw){
-  const raw = b64(PAYLOAD);
-  const salt = raw.slice(0, 16), iv = raw.slice(16, 28), ct = raw.slice(28);
-  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
-  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:ITER, hash:"SHA-256"},
-    base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
-  const buf = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);   // 密碼錯誤時會丟出例外
-  return JSON.parse(new TextDecoder().decode(buf));
+//#crypto-begin
+async function deriveKey(pw, salt, usage){
+  const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:ITER, hash:"SHA-256"},
+    base, {name:"AES-GCM", length:256}, false, [usage]);
+}
+async function decryptPayload(p, pw){
+  const raw = b64(p);
+  const key = await deriveKey(pw, raw.slice(0, 16), "decrypt");
+  const buf = await crypto.subtle.decrypt({name:"AES-GCM", iv:raw.slice(16, 28)}, key, raw.slice(28)); // 密碼錯誤時會丟出例外
+  const o = JSON.parse(dec.decode(buf));
+  return Array.isArray(o) ? {date:"", D:o} : o;
+}
+async function encryptPayload(obj, pw){
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pw, salt, "encrypt");
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, enc.encode(JSON.stringify(obj))));
+  const out = new Uint8Array(28 + ct.length); out.set(salt); out.set(iv, 16); out.set(ct, 28);
+  return toB64(out);
+}
+//#crypto-end
+
+// ---------- 狀態 ----------
+let PW = "", curPayload = PAYLOAD;
+let D = [], meta = {date:""}, baselineD = "";
+let rows = [], units = [], unitFilter = "";
+let editing = false, draft = null, composing = false, saving = false;
+
+// ---------- 資料處理（欄位：[單位, 姓名/職稱, 分機, 手機, 市話(☎), 傳真, 備註]） ----------
+const split = s => (s || "").split("、").filter(Boolean);
+const digits = s => s.replace(/\D/g, "");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// 把「638244-269」「8509-9210~12」「252265-8」展開成 [起, 迄] 數字區間
+function range(tok){
+  let m = tok.match(/^(\d+)-(\d+)$/);            // 分機區間：638244-269
+  if (m && m[1].length >= 6 && m[2].length < m[1].length){
+    const a = m[1], b = a.slice(0, a.length - m[2].length) + m[2];
+    return [a, b];
+  }
+  m = tok.match(/^(\d{4})-(\d{4})~(\d+)$/);        // 市話區間：8509-9210~12
+  if (m){
+    const a = m[1] + m[2], b = a.slice(0, a.length - m[3].length) + m[3];
+    return [a, b];
+  }
+  return null;
 }
 
-// 欄位：[單位, 姓名/職稱, 分機, 手機, 市話(☎), 傳真, 備註]
-function start(D){
-  const split = s => (s || "").split("、").filter(Boolean);
-  const digits = s => s.replace(/\D/g, "");
-
-  // 把「638244-269」「8509-9210~12」「252265-8」展開成 [起, 迄] 數字區間
-  function range(tok){
-    let m = tok.match(/^(\d+)-(\d+)$/);            // 分機區間：638244-269
-    if (m && m[1].length >= 6 && m[2].length < m[1].length){
-      const a = m[1], b = a.slice(0, a.length - m[2].length) + m[2];
-      return [a, b];
-    }
-    m = tok.match(/^(\d{4})-(\d{4})~(\d+)$/);        // 市話區間：8509-9210~12
-    if (m){
-      const a = m[1] + m[2], b = a.slice(0, a.length - m[3].length) + m[3];
-      return [a, b];
-    }
-    return null;
-  }
-
-  const rows = D.map(([unit, name, ext, mob, tel, fax, note]) => {
+function buildRows(list){
+  return list.map(([unit, name, ext, mob, tel, fax, note]) => {
     const nums = [];
     split(ext).forEach(v => nums.push({k:"分機", v}));
     split(mob).forEach(v => nums.push({k:"手機", v, href:"tel:" + v}));
@@ -131,97 +193,279 @@ function start(D){
     nums.forEach(n => { n.d = digits(n.v); n.r = range(n.v); });
     return {unit, name, note, nums, text:(unit + name + (note || "")).toLowerCase()};
   });
+}
 
-  const units = [...new Set(D.map(r => r[0]))];
-  let unitFilter = "";
-  const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-
-  function hl(text, q){
-    if (!q) return esc(text);
-    const i = text.toLowerCase().indexOf(q);
-    return i < 0 ? esc(text) : esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+q.length)) + "</mark>" + esc(text.slice(i+q.length));
-  }
-
-  // 數字比對時，以原字串中的數字位置標示（忽略「-」）
-  function hlNum(v, qd){
-    if (!qd) return esc(v);
-    const pos = []; for (let i = 0; i < v.length; i++) if (/\d/.test(v[i])) pos.push(i);
-    const d = pos.map(i => v[i]).join("");
-    const at = d.indexOf(qd);
-    if (at < 0) return esc(v);
-    const s = pos[at], e = pos[at + qd.length - 1] + 1;
-    return esc(v.slice(0,s)) + "<mark>" + esc(v.slice(s,e)) + "</mark>" + esc(v.slice(e));
-  }
-
-  function numHit(n, qd){
-    if (!qd) return false;
-    if (n.d.includes(qd)) return true;
-    if (n.r && qd.length === n.r[0].length) return qd >= n.r[0] && qd <= n.r[1];
-    // 市話也可只輸入後 8 碼外加區碼 02
-    if (n.k === "☎" && qd.startsWith("02") && ("02" + n.d).includes(qd)) return true;
-    return false;
-  }
-
-  function render(){
-    const raw = $("q").value.trim();
-    const q = raw.toLowerCase();
-    const qd = digits(raw);
-    const isNum = qd.length > 0 && /^[\d\s\-()~+]+$/.test(raw);
-    $("clear").hidden = !raw;
-
-    const res = rows.filter(r => {
-      if (unitFilter && r.unit !== unitFilter) return false;
-      if (!raw) return true;
-      if (isNum) return r.nums.some(n => numHit(n, qd));
-      return r.text.includes(q);
-    });
-
-    const html = [];
-    let last = null;
-    res.forEach(r => {
-      if (!raw && r.unit !== last){ html.push(`<h2 id="u-${esc(r.unit)}">${esc(r.unit)}</h2>`); last = r.unit; }
-      const nums = r.nums.map(n => {
-        const hit = isNum && numHit(n, qd);
-        const v = hit ? hlNum(n.v, qd) : esc(n.v);
-        const inRange = hit && n.r && !n.d.includes(qd) ? ` <span class="k">含 ${esc(qd)}</span>` : "";
-        const body = `<span class="k">${n.k}</span>${v}${inRange}`;
-        return n.href ? `<a class="num" href="${n.href}">${body}</a>` : `<span class="num">${body}</span>`;
-      }).join("");
-      html.push(`<div class="card"><div class="top"><span class="name">${isNum ? esc(r.name) : hl(r.name, q)}</span>`
-        + `<span class="unit">${isNum ? esc(r.unit) : hl(r.unit, q)}</span></div>`
-        + `<div class="nums">${nums}</div>`
-        + (r.note ? `<div class="note">${isNum ? esc(r.note) : hl(r.note, q)}</div>` : "")
-        + `</div>`);
-    });
-    $("list").innerHTML = html.join("") || `<div class="empty">查無「${esc(raw)}」</div>`;
-    $("status").textContent = raw || unitFilter ? `找到 ${res.length} 筆` : `共 ${rows.length} 筆`;
-  }
-
+function setData(list){
+  D = list;
+  rows = buildRows(D);
+  units = [...new Set(D.map(r => r[0]))];
+  if (unitFilter && !units.includes(unitFilter)) unitFilter = "";
+  $("ulist").innerHTML = units.map(u => `<option value="${esc(u)}">`).join("");
   $("chips").innerHTML = ["全部", ...units].map((u, i) =>
-    `<a class="chip" href="#${i ? "u-" + esc(u) : ""}" data-u="${i ? esc(u) : ""}" aria-pressed="${i === 0}">${esc(u)}</a>`).join("");
-  $("search").hidden = false;
+    `<button type="button" class="chip" data-u="${i ? esc(u) : ""}" aria-pressed="${(i ? u : "") === unitFilter}">${esc(u)}</button>`).join("");
+  $("date").textContent = meta.date ? "製表 " + meta.date : "";
+}
+
+// ---------- 搜尋顯示 ----------
+function hl(text, q){
+  if (!q) return esc(text);
+  const i = text.toLowerCase().indexOf(q);
+  return i < 0 ? esc(text) : esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+q.length)) + "</mark>" + esc(text.slice(i+q.length));
+}
+
+// 數字比對時，以原字串中的數字位置標示（忽略「-」）
+function hlNum(v, qd){
+  if (!qd) return esc(v);
+  const pos = []; for (let i = 0; i < v.length; i++) if (/\d/.test(v[i])) pos.push(i);
+  const d = pos.map(i => v[i]).join("");
+  const at = d.indexOf(qd);
+  if (at < 0) return esc(v);
+  const s = pos[at], e = pos[at + qd.length - 1] + 1;
+  return esc(v.slice(0,s)) + "<mark>" + esc(v.slice(s,e)) + "</mark>" + esc(v.slice(e));
+}
+
+function numHit(n, qd){
+  if (!qd) return false;
+  if (n.d.includes(qd)) return true;
+  if (n.r && qd.length === n.r[0].length) return qd >= n.r[0] && qd <= n.r[1];
+  // 市話也可只輸入後 8 碼外加區碼 02
+  if (n.k === "☎" && qd.startsWith("02") && ("02" + n.d).includes(qd)) return true;
+  return false;
+}
+
+function renderView(){
+  const raw = $("q").value.trim();
+  const q = raw.toLowerCase();
+  const qd = digits(raw);
+  const isNum = qd.length > 0 && /^[\d\s\-()~+]+$/.test(raw);
+
+  const res = rows.filter(r => {
+    if (unitFilter && r.unit !== unitFilter) return false;
+    if (!raw) return true;
+    if (isNum) return r.nums.some(n => numHit(n, qd));
+    return r.text.includes(q);
+  });
+
+  const html = [];
+  let last = null;
+  res.forEach(r => {
+    if (!raw && r.unit !== last){ html.push(`<h2 id="u-${esc(r.unit)}">${esc(r.unit)}</h2>`); last = r.unit; }
+    const nums = r.nums.map(n => {
+      const hit = isNum && numHit(n, qd);
+      const v = hit ? hlNum(n.v, qd) : esc(n.v);
+      const inRange = hit && n.r && !n.d.includes(qd) ? ` <span class="k">含 ${esc(qd)}</span>` : "";
+      const body = `<span class="k">${n.k}</span>${v}${inRange}`;
+      return n.href ? `<a class="num" href="${n.href}">${body}</a>` : `<span class="num">${body}</span>`;
+    }).join("");
+    html.push(`<div class="card"><div class="top"><span class="name">${isNum ? esc(r.name) : hl(r.name, q)}</span>`
+      + `<span class="unit">${isNum ? esc(r.unit) : hl(r.unit, q)}</span></div>`
+      + `<div class="nums">${nums}</div>`
+      + (r.note ? `<div class="note">${isNum ? esc(r.note) : hl(r.note, q)}</div>` : "")
+      + `</div>`);
+  });
+  $("list").innerHTML = html.join("") || `<div class="empty">查無「${esc(raw)}」</div>`;
+  $("status").textContent = raw || unitFilter ? `找到 ${res.length} 筆` : `共 ${rows.length} 筆`;
+}
+
+// ---------- 編輯模式 ----------
+const LABELS = ["單位", "姓名／職稱", "分機", "手機", "市話（☎）", "傳真", "備註"];
+const HINTS = ["", "", "多個以「、」分隔", "", "例：8509-9203", "", ""];
+
+function matchDraft(r, raw){
+  if (!raw) return true;
+  if (r.join(" ").toLowerCase().includes(raw.toLowerCase())) return true;
+  const qd = digits(raw);
+  return qd.length > 0 && /^[\d\s\-()~+]+$/.test(raw) && r.some(f => digits(f).includes(qd));
+}
+
+function renderEdit(){
+  const raw = $("q").value.trim();
+  let n = 0;
+  const html = draft.map((r, i) => {
+    if (unitFilter && r[0] !== unitFilter) return "";
+    if (!matchDraft(r, raw)) return "";
+    n++;
+    const f = (k, extra) => `<label><span>${LABELS[k]}</span><input data-f="${k}" value="${esc(r[k])}" placeholder="${HINTS[k]}" autocomplete="off" ${extra || ""}></label>`;
+    return `<div class="card edit" data-i="${i}">`
+      + `<div class="erow">${f(0, 'list="ulist"')}${f(1)}</div>`
+      + `<div class="erow">${f(2)}${f(3, 'inputmode="tel"')}</div>`
+      + `<div class="erow">${f(4)}${f(5)}</div>`
+      + `<div class="erow">${f(6)}</div>`
+      + `<button type="button" class="del" data-del>刪除此筆</button></div>`;
+  }).join("");
+  $("list").innerHTML = html || `<div class="empty">沒有符合的資料</div>`;
+  $("status").textContent = `編輯中：顯示 ${n} 筆（共 ${draft.length} 筆）`;
+}
+
+function refresh(){
+  const raw = $("q").value;
+  $("clear").hidden = !raw;
+  editing ? renderEdit() : renderView();
+}
+
+const trimTail = r => { const a = r.map(x => String(x).trim()); while (a.length > 2 && a[a.length - 1] === "") a.pop(); return a; };
+const cleanList = list => list.map(trimTail).filter(r => r.some(Boolean));
+const regroup = list => { const order = []; list.forEach(r => { if (!order.includes(r[0])) order.push(r[0]); }); return order.flatMap(u => list.filter(r => r[0] === u)); };
+const dirty = () => JSON.stringify(regroup(cleanList(draft))) !== JSON.stringify(regroup(cleanList(D)));
+const say = (t, bad) => { const m = $("msg"); m.textContent = t || ""; m.className = "msg" + (bad ? " bad" : ""); m.hidden = !t; };
+
+function enterEdit(){
+  draft = D.map(r => { const a = r.slice(0, 7); while (a.length < 7) a.push(""); return a; });
+  editing = true; say("");
+  $("btnEdit").hidden = true; $("ebar").hidden = false; $("btnSet").hidden = false;
+  document.body.classList.add("editing");
+  refresh();
+}
+function leaveEdit(){
+  editing = false; draft = null;
+  $("btnEdit").hidden = false; $("ebar").hidden = true;
+  document.body.classList.remove("editing");
+  refresh();
+}
+
+// ---------- GitHub 權杖 ----------
+const tokKey = repo => "pbtok:" + repo;
+const getTok = repo => { try { return localStorage.getItem(tokKey(repo)) || ""; } catch(e){ return ""; } };
+const setTok = (repo, v) => { try { v ? localStorage.setItem(tokKey(repo), v) : localStorage.removeItem(tokKey(repo)); } catch(e){} };
+
+function openSettings(){
+  $("tokbox").innerHTML = TARGETS.map((t, i) =>
+    `<label><span>${esc(t.repo)}　<em>${getTok(t.repo) ? "已設定" : "未設定"}</em></span>`
+    + `<input type="password" data-i="${i}" autocomplete="off" placeholder="${getTok(t.repo) ? "留空＝不變" : "貼上 GitHub 權杖"}">`
+    + `<button type="button" class="link" data-clear="${i}">清除</button></label>`).join("");
+  $("settings").showModal();
+}
+
+async function gh(t, method, body){
+  const res = await fetch(`https://api.github.com/repos/${t.repo}/contents/${t.path}` + (method === "GET" ? `?ref=${encodeURIComponent(t.branch)}` : ""), {
+    method, cache:"no-store",
+    headers:{Authorization:"Bearer " + getTok(t.repo), Accept:"application/vnd.github+json", ...(body ? {"Content-Type":"application/json"} : {})},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(res.status + " " + (j.message || ""));
+  return j;
+}
+
+async function pushOne(t, newPayload, newJson){
+  const cur = await gh(t, "GET");
+  const text = dec.decode(b64(cur.content));
+  const m = text.match(PAY_RE), im = text.match(ITER_RE);
+  if (!m) throw new Error("找不到資料區塊");
+  if (!im || +im[1] !== ITER) throw new Error("加密參數與遠端不一致");
+  let remote;
+  try { remote = await decryptPayload(m[1], PW); } catch(e){ throw new Error("遠端密碼與目前不同"); }
+  const rj = JSON.stringify(remote.D);
+  if (rj === newJson) return "已是最新";
+  if (rj !== baselineD) throw new Error("遠端資料已被別處更新，請重新整理後再編輯");
+  const out = text.replace(PAY_RE, () => `const PAYLOAD = "${newPayload}";`);
+  await gh(t, "PUT", {message:"更新電話資料（網頁編輯）", content:toB64(enc.encode(out)), sha:cur.sha, branch:t.branch});
+  return "已更新";
+}
+
+function rocToday(){
+  const d = new Date(), p = n => String(n).padStart(2, "0");
+  return `${d.getFullYear() - 1911}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
+}
+
+async function save(){
+  if (saving) return;
+  const list = cleanList(draft);
+  const bad = list.findIndex(r => !r[0] || !r[1]);
+  if (bad >= 0){ say(`有資料缺少「單位」或「姓名」：${list[bad].filter(Boolean).join(" / ") || "（空白）"}`, true); return; }
+  const newD = regroup(list), newJson = JSON.stringify(newD);
+  if (newJson === JSON.stringify(regroup(cleanList(D)))){ say("沒有變更"); leaveEdit(); return; }
+  const targets = TARGETS.filter(t => getTok(t.repo));
+  if (!targets.length){ say("尚未設定 GitHub 權杖，請先按 ⚙ 設定。", true); openSettings(); return; }
+
+  saving = true; $("btnSave").disabled = true;
+  try {
+    say("加密中…");
+    const date = rocToday();
+    const newPayload = await encryptPayload({date, D:newD}, PW);
+    const lines = [], fails = [];
+    for (const t of targets){
+      say(`寫入 ${t.repo} …`);
+      try { lines.push(`${t.repo}：${await pushOne(t, newPayload, newJson)}`); }
+      catch(e){ fails.push(`${t.repo}：${e.message}`); }
+    }
+    const skipped = TARGETS.filter(t => !getTok(t.repo)).map(t => t.repo + "：未設定權杖，已略過");
+    if (fails.length){ say("部分失敗，可修正後再按儲存重試。\n" + [...fails, ...lines, ...skipped].join("\n"), true); return; }
+    curPayload = newPayload; meta.date = date; baselineD = newJson;
+    setData(newD); leaveEdit();
+    say("已儲存。網站約 1～2 分鐘後對所有人更新。\n" + [...lines, ...skipped].join("\n"));
+  } catch(e){
+    say("儲存失敗：" + e.message, true);
+  } finally { saving = false; $("btnSave").disabled = false; }
+}
+
+// ---------- 事件 ----------
+function bind(){
   $("chips").addEventListener("click", e => {
     const b = e.target.closest(".chip"); if (!b) return;
-    e.preventDefault();
     unitFilter = b.dataset.u;
     document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
-    render();
+    refresh();
+    window.scrollTo({top:0});
   });
-  $("q").addEventListener("input", render);
-  $("clear").addEventListener("click", () => { $("q").value = ""; render(); $("q").focus(); });
-  $("lock").hidden = true;
-  $("hdr").hidden = false;
-  $("list").hidden = false;
-  render();
+  $("q").addEventListener("input", () => { if (!composing) refresh(); });
+  $("q").addEventListener("compositionstart", () => { composing = true; });
+  $("q").addEventListener("compositionend", () => { composing = false; refresh(); });
+  $("clear").addEventListener("click", () => { $("q").value = ""; refresh(); $("q").focus(); });
+
+  $("btnEdit").addEventListener("click", enterEdit);
+  $("btnCancel").addEventListener("click", () => { if (!dirty() || confirm("放棄尚未儲存的修改？")) { say(""); leaveEdit(); } });
+  $("btnSave").addEventListener("click", save);
+  $("btnAdd").addEventListener("click", () => {
+    $("q").value = "";
+    const u = unitFilter; let at = 0;
+    if (u) for (let i = draft.length - 1; i >= 0; i--) if (draft[i][0] === u){ at = i + 1; break; }
+    draft.splice(at, 0, [u, "", "", "", "", "", ""]);
+    refresh();
+    const c = document.querySelector(`.card[data-i="${at}"] input[data-f="${u ? 1 : 0}"]`);
+    if (c){ c.scrollIntoView({block:"center"}); c.focus(); }
+  });
+  $("list").addEventListener("input", e => {
+    if (!editing) return;
+    const inp = e.target.closest("input[data-f]"); if (!inp) return;
+    draft[+inp.closest(".card").dataset.i][+inp.dataset.f] = inp.value;
+  });
+  $("list").addEventListener("click", e => {
+    const b = e.target.closest("[data-del]"); if (!b || !editing) return;
+    const i = +b.closest(".card").dataset.i, r = draft[i];
+    if (confirm(`刪除「${r[1].trim() || "（空白）"}」？`)){ draft.splice(i, 1); refresh(); }
+  });
+
+  $("btnSet").addEventListener("click", openSettings);
+  $("tokbox").addEventListener("click", e => {
+    const b = e.target.closest("[data-clear]"); if (!b) return;
+    setTok(TARGETS[+b.dataset.clear].repo, ""); openSettings();
+  });
+  $("tokSave").addEventListener("click", () => {
+    $("tokbox").querySelectorAll("input[data-i]").forEach(inp => { const v = inp.value.trim(); if (v) setTok(TARGETS[+inp.dataset.i].repo, v); });
+    $("settings").close();
+  });
+  $("tokClose").addEventListener("click", () => $("settings").close());
+  window.addEventListener("beforeunload", e => { if (editing && dirty()){ e.preventDefault(); e.returnValue = ""; } });
+}
+
+function start(o){
+  meta = {date:o.date || ""};
+  baselineD = JSON.stringify(o.D);
+  $("lock").hidden = true; $("hdr").hidden = false; $("list").hidden = false;
+  bind();
+  setData(o.D);
+  refresh();
 }
 
 async function tryUnlock(pw, silent){
   const btn = $("unlock"), err = $("err");
   btn.disabled = true; err.textContent = "";
   try {
-    const D = await decrypt(pw);
+    const o = await decryptPayload(PAYLOAD, pw);
+    PW = pw;
     try { sessionStorage.setItem("pb", pw); } catch(e){}
-    start(D);
+    start(o);
   } catch(e){
     try { sessionStorage.removeItem("pb"); } catch(_){}
     if (!silent){ err.textContent = "密碼錯誤"; $("pw").select(); }
