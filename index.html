@@ -55,309 +55,182 @@ a.num .k{color:inherit;opacity:.8}
 mark{background:var(--hit);color:inherit;border-radius:3px}
 .empty{text-align:center;color:var(--muted);padding:40px 0}
 footer{font-size:12px;color:var(--muted);text-align:center;padding:0 16px 24px}
+.lock{max-width:320px;margin:72px auto;padding:0 16px;text-align:center}
+.lock p{color:var(--muted);font-size:14px;margin:0 0 12px}
+.lock input{width:100%;font-size:22px;letter-spacing:.3em;text-align:center;padding:12px;border:1px solid var(--line);
+  border-radius:12px;background:var(--card);color:var(--text);outline:none}
+.lock input:focus{border-color:var(--accent)}
+.lock button{margin-top:12px;width:100%;font-size:16px;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer}
+.lock button:disabled{opacity:.6}
+.lock .err{color:#c62828;font-size:14px;min-height:20px;margin-top:8px}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
-<header>
+<form class="lock" id="lock" autocomplete="off">
+  <p>此頁需要密碼</p>
+  <input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="密碼" aria-label="密碼" autofocus>
+  <button id="unlock" type="submit">解鎖</button>
+  <div class="err" id="err" role="alert"></div>
+</form>
+<header id="hdr" hidden>
   <h1>國防部主計局電話查詢 <small>製表 115.11.16</small></h1>
   <div class="search" id="search" hidden>
     <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="電話、分機或姓名" aria-label="搜尋">
     <button id="clear" type="button" aria-label="清除" hidden>×</button>
   </div>
-  <nav class="chips" id="chips" aria-label="單位"><!--STATIC:chips--><a class="chip" href="#" data-u="" aria-pressed="true">全部</a><a class="chip" href="#u-局辦" data-u="局辦" aria-pressed="false">局辦</a><a class="chip" href="#u-計統處" data-u="計統處" aria-pressed="false">計統處</a><a class="chip" href="#u-歲計處" data-u="歲計處" aria-pressed="false">歲計處</a><a class="chip" href="#u-特種基金處" data-u="特種基金處" aria-pressed="false">特種基金處</a><a class="chip" href="#u-財務會計處" data-u="財務會計處" aria-pressed="false">財務會計處</a><a class="chip" href="#u-主計室" data-u="主計室" aria-pressed="false">主計室</a><a class="chip" href="#u-財務中心" data-u="財務中心" aria-pressed="false">財務中心</a><a class="chip" href="#u-國軍同袍儲蓄會" data-u="國軍同袍儲蓄會" aria-pressed="false">國軍同袍儲蓄會</a><a class="chip" href="#u-帳務中心" data-u="帳務中心" aria-pressed="false">帳務中心</a><a class="chip" href="#u-常用電話" data-u="常用電話" aria-pressed="false">常用電話</a><!--/STATIC--></nav>
-  <div class="status" id="status">此預覽不能執行搜尋（如雲端硬碟預覽）。可點上方單位跳轉，或用瀏覽器開啟本檔即可搜尋。</div>
+  <nav class="chips" id="chips" aria-label="單位"></nav>
+  <div class="status" id="status"></div>
 </header>
-<main id="list"><!--STATIC:list--><h2 id="u-局辦">局辦</h2><div class="card"><div class="top"><span class="name">謝局長</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636800</span><a class="num" href="tel:0965296380"><span class="k">手機</span>0965296380</a></div></div><div class="card"><div class="top"><span class="name">辛副局長</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636801</span><a class="num" href="tel:0965296154"><span class="k">手機</span>0965296154</a></div></div><div class="card"><div class="top"><span class="name">徐安佑</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636802</span><a class="num" href="tel:0932493948"><span class="k">手機</span>0932493948</a></div></div><div class="card"><div class="top"><span class="name">（局辦）</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636803</span><a class="num" href="tel:0965295798"><span class="k">手機</span>0965295798</a><a class="num" href="tel:0285099203"><span class="k">☎</span>8509-9203</a></div></div><div class="card"><div class="top"><span class="name">本局值日官室</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636929</span><a class="num" href="tel:0932490138"><span class="k">手機</span>0932490138</a><a class="num" href="tel:0285099168"><span class="k">☎</span>8509-9168</a></div></div><div class="card"><div class="top"><span class="name">本局傳真機</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>634025</span><a class="num" href="tel:0285099169"><span class="k">☎</span>8509-9169</a></div></div><div class="card"><div class="top"><span class="name">本室第三會議室</span><span class="unit">局辦</span></div><div class="nums"><span class="num"><span class="k">分機</span>636842</span></div></div><h2 id="u-計統處">計統處</h2><div class="card"><div class="top"><span class="name">梁處長</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636856</span><a class="num" href="tel:0932493945"><span class="k">手機</span>0932493945</a><a class="num" href="tel:0285099208"><span class="k">☎</span>8509-9208</a></div></div><div class="card"><div class="top"><span class="name">林副處長</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636867</span><a class="num" href="tel:0932492900"><span class="k">手機</span>0932492900</a></div></div><div class="card"><div class="top"><span class="name">計統處（市話）</span><span class="unit">計統處</span></div><div class="nums"><a class="num" href="tel:0285099209"><span class="k">☎</span>8509-9209</a><span class="num"><span class="k">☎</span>8509-9210~12</span></div></div><div class="card"><div class="top"><span class="name">莊科長</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636861</span><a class="num" href="tel:0965292969"><span class="k">手機</span>0965292969</a></div></div><div class="card"><div class="top"><span class="name">胡科長</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636865</span></div></div><div class="card"><div class="top"><span class="name">黃于芬</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636836</span></div></div><div class="card"><div class="top"><span class="name">黃智強</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636877</span></div></div><div class="card"><div class="top"><span class="name">曾婕</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636839</span></div></div><div class="card"><div class="top"><span class="name">陳彥全</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636878</span><a class="num" href="tel:0965295026"><span class="k">手機</span>0965295026</a></div></div><div class="card"><div class="top"><span class="name">洪慈君</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636857</span></div></div><div class="card"><div class="top"><span class="name">李逸珊</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636880</span></div></div><div class="card"><div class="top"><span class="name">廖偉茹</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636864</span></div></div><div class="card"><div class="top"><span class="name">李政翰</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636882</span></div></div><div class="card"><div class="top"><span class="name">游茹卉</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636862</span></div></div><div class="card"><div class="top"><span class="name">羅翊輔</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636884</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636858</span></div></div><div class="card"><div class="top"><span class="name">李昕恩</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636883</span></div></div><div class="card"><div class="top"><span class="name">梁朝翔</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636866</span></div></div><div class="card"><div class="top"><span class="name">馮崇維</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636885</span></div></div><div class="card"><div class="top"><span class="name">林惠珠</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636873</span></div></div><div class="card"><div class="top"><span class="name">張誌良</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636886</span></div></div><div class="card"><div class="top"><span class="name">張業承</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636875</span></div></div><div class="card"><div class="top"><span class="name">劉虹君</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636887</span><a class="num" href="tel:0932492878"><span class="k">手機</span>0932492878</a></div></div><div class="card"><div class="top"><span class="name">賴聰松</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636876</span></div></div><div class="card"><div class="top"><span class="name">張立蓁</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636928</span></div></div><div class="card"><div class="top"><span class="name">陳德恩</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636872</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636871</span></div></div><div class="card"><div class="top"><span class="name">高靖閔</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636881</span></div></div><div class="card"><div class="top"><span class="name">文卷室</span><span class="unit">計統處</span></div><div class="nums"><a class="num" href="tel:0285099220"><span class="k">☎</span>8509-9220</a></div></div><div class="card"><div class="top"><span class="name">檔案室</span><span class="unit">計統處</span></div><div class="nums"><a class="num" href="tel:0285099221"><span class="k">☎</span>8509-9221</a></div></div><div class="card"><div class="top"><span class="name">劉超凡</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636837</span></div></div><div class="card"><div class="top"><span class="name">黃美玲</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636863</span><span class="num"><span class="k">分機</span>636840</span></div><div class="note">636863 文卷室；636840 檔案室</div></div><div class="card"><div class="top"><span class="name">張文馨</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636838</span></div></div><div class="card"><div class="top"><span class="name">邱明鈺</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636869</span></div></div><div class="card"><div class="top"><span class="name">交換電腦</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636874</span></div></div><div class="card"><div class="top"><span class="name">林伯樵</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636870</span></div></div><div class="card"><div class="top"><span class="name">王淑霖</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636868</span></div></div><div class="card"><div class="top"><span class="name">雲端服務網駐點工程師</span><span class="unit">計統處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636860</span></div></div><h2 id="u-歲計處">歲計處</h2><div class="card"><div class="top"><span class="name">嚴處長</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636809</span><a class="num" href="tel:0965296353"><span class="k">手機</span>0965296353</a><a class="num" href="tel:0285099204"><span class="k">☎</span>8509-9204</a></div></div><div class="card"><div class="top"><span class="name">蔡副處長</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636835</span><a class="num" href="tel:0932493054"><span class="k">手機</span>0932493054</a></div></div><div class="card"><div class="top"><span class="name">歲計處（市話）</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">☎</span>8509-9205~6</span></div></div><div class="card"><div class="top"><span class="name">陳科長慶華</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636810</span><a class="num" href="tel:0965292784"><span class="k">手機</span>0965292784</a></div></div><div class="card"><div class="top"><span class="name">陳科長啟祥</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636825</span></div></div><div class="card"><div class="top"><span class="name">郭育廷</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636811</span><a class="num" href="tel:0932492892"><span class="k">手機</span>0932492892</a></div></div><div class="card"><div class="top"><span class="name">申佩鑫</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636826</span><a class="num" href="tel:0932497807"><span class="k">手機</span>0932497807</a></div></div><div class="card"><div class="top"><span class="name">謝承堯</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636812</span><a class="num" href="tel:0932497829"><span class="k">手機</span>0932497829</a></div></div><div class="card"><div class="top"><span class="name">吳政謙</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636827</span><a class="num" href="tel:0965292997"><span class="k">手機</span>0965292997</a></div></div><div class="card"><div class="top"><span class="name">林明遠</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636813</span><a class="num" href="tel:0932492792"><span class="k">手機</span>0932492792</a></div></div><div class="card"><div class="top"><span class="name">陳宏政</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636829</span><a class="num" href="tel:0932493935"><span class="k">手機</span>0932493935</a></div></div><div class="card"><div class="top"><span class="name">黃致學</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636814</span><a class="num" href="tel:0965292782"><span class="k">手機</span>0965292782</a></div></div><div class="card"><div class="top"><span class="name">陳文成</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636830</span><a class="num" href="tel:0932492793"><span class="k">手機</span>0932492793</a></div></div><div class="card"><div class="top"><span class="name">蔡欣妤</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636815</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636831</span><a class="num" href="tel:0965292993"><span class="k">手機</span>0965292993</a></div></div><div class="card"><div class="top"><span class="name">陳偉哲</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636816</span><a class="num" href="tel:0932492795"><span class="k">手機</span>0932492795</a></div></div><div class="card"><div class="top"><span class="name">黃仁隆</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636832</span><a class="num" href="tel:0932491867"><span class="k">手機</span>0932491867</a></div></div><div class="card"><div class="top"><span class="name">黎文舜</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636818</span><a class="num" href="tel:0965295024"><span class="k">手機</span>0965295024</a></div></div><div class="card"><div class="top"><span class="name">童紹澄</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636833</span><a class="num" href="tel:0932493927"><span class="k">手機</span>0932493927</a></div></div><div class="card"><div class="top"><span class="name">吳孟蓉</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636820</span><a class="num" href="tel:0932492006"><span class="k">手機</span>0932492006</a></div></div><div class="card"><div class="top"><span class="name">謝欣倫</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636834</span><a class="num" href="tel:0932491009"><span class="k">手機</span>0932491009</a></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636821</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636817</span></div></div><div class="card"><div class="top"><span class="name">詹昌祐</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636822</span><a class="num" href="tel:0932497811"><span class="k">手機</span>0932497811</a></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636819</span></div></div><div class="card"><div class="top"><span class="name">劉達</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636823</span><a class="num" href="tel:0932493073"><span class="k">手機</span>0932493073</a></div></div><div class="card"><div class="top"><span class="name">王瑞君</span><span class="unit">歲計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636824</span></div></div><h2 id="u-特種基金處">特種基金處</h2><div class="card"><div class="top"><span class="name">林處長</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636888</span><a class="num" href="tel:0932493053"><span class="k">手機</span>0932493053</a><a class="num" href="tel:0285099215"><span class="k">☎</span>8509-9215</a></div></div><div class="card"><div class="top"><span class="name">周副處長</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636897</span><a class="num" href="tel:0932493940"><span class="k">手機</span>0932493940</a></div></div><div class="card"><div class="top"><span class="name">特種基金處（市話）</span><span class="unit">特種基金處</span></div><div class="nums"><a class="num" href="tel:0285099216"><span class="k">☎</span>8509-9216</a></div></div><div class="card"><div class="top"><span class="name">張簡逸中</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636889</span></div></div><div class="card"><div class="top"><span class="name">張婷雁</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636896</span></div></div><div class="card"><div class="top"><span class="name">褚冠瑋</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636892</span></div></div><div class="card"><div class="top"><span class="name">柯彥良</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636898</span></div></div><div class="card"><div class="top"><span class="name">謝正軒</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636893</span></div></div><div class="card"><div class="top"><span class="name">陳威吉</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636899</span><a class="num" href="tel:0965292781"><span class="k">手機</span>0965292781</a></div></div><div class="card"><div class="top"><span class="name">張玉佳</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636894</span><a class="num" href="tel:0932493936"><span class="k">手機</span>0932493936</a></div></div><div class="card"><div class="top"><span class="name">羅巧芸</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636900</span></div></div><div class="card"><div class="top"><span class="name">朱純嬅</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636895</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">特種基金處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636901</span></div></div><h2 id="u-財務會計處">財務會計處</h2><div class="card"><div class="top"><span class="name">林處長</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636903</span><a class="num" href="tel:0932493949"><span class="k">手機</span>0932493949</a><a class="num" href="tel:0285099213"><span class="k">☎</span>8509-9213</a></div></div><div class="card"><div class="top"><span class="name">李副處長</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636905</span><a class="num" href="tel:0931491276"><span class="k">手機</span>0931491276</a></div></div><div class="card"><div class="top"><span class="name">財務會計處（市話）</span><span class="unit">財務會計處</span></div><div class="nums"><a class="num" href="tel:0285099214"><span class="k">☎</span>8509-9214</a><a class="num" href="tel:0285099293"><span class="k">☎</span>8509-9293</a></div></div><div class="card"><div class="top"><span class="name">李科長</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636904</span><a class="num" href="tel:0932491552"><span class="k">手機</span>0932491552</a></div></div><div class="card"><div class="top"><span class="name">劉科長</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636924</span><a class="num" href="tel:0932498088"><span class="k">手機</span>0932498088</a></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636906</span></div></div><div class="card"><div class="top"><span class="name">葉昭輝</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636916</span></div></div><div class="card"><div class="top"><span class="name">王廷軒</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636907</span></div></div><div class="card"><div class="top"><span class="name">陳則融</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636917</span></div></div><div class="card"><div class="top"><span class="name">（未列姓名）</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636908</span></div></div><div class="card"><div class="top"><span class="name">何蕙如</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636918</span></div></div><div class="card"><div class="top"><span class="name">邱俊樺</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636910</span><a class="num" href="tel:0932492894"><span class="k">手機</span>0932492894</a></div></div><div class="card"><div class="top"><span class="name">歐思含</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636919</span></div></div><div class="card"><div class="top"><span class="name">蔡明達</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636912</span></div></div><div class="card"><div class="top"><span class="name">連緯育</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636921</span></div></div><div class="card"><div class="top"><span class="name">黃誌堂</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636913</span></div></div><div class="card"><div class="top"><span class="name">黃柏文</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636922</span></div></div><div class="card"><div class="top"><span class="name">黎蕎緁</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636914</span></div></div><div class="card"><div class="top"><span class="name">陳曉緣</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636923</span></div></div><div class="card"><div class="top"><span class="name">林月秀</span><span class="unit">財務會計處</span></div><div class="nums"><span class="num"><span class="k">分機</span>636915</span></div></div><h2 id="u-主計室">主計室</h2><div class="card"><div class="top"><span class="name">邱主任</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636844</span><a class="num" href="tel:0932492891"><span class="k">手機</span>0932492891</a><a class="num" href="tel:0285099217"><span class="k">☎</span>8509-9217</a></div></div><div class="card"><div class="top"><span class="name">主計室（市話）</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">☎</span>8509-9218~9</span></div></div><div class="card"><div class="top"><span class="name">謝科長</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636854</span><a class="num" href="tel:0932493941"><span class="k">手機</span>0932493941</a></div></div><div class="card"><div class="top"><span class="name">科長</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636845</span><a class="num" href="tel:0932497810"><span class="k">手機</span>0932497810</a></div></div><div class="card"><div class="top"><span class="name">尹作民</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636851</span></div></div><div class="card"><div class="top"><span class="name">陳俊傑</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636846</span></div></div><div class="card"><div class="top"><span class="name">連惠珍</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636847</span></div></div><div class="card"><div class="top"><span class="name">林信潔</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636931</span></div></div><div class="card"><div class="top"><span class="name">胡淑雯</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636848</span></div><div class="note">出納（會計）室</div></div><div class="card"><div class="top"><span class="name">於維芳</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636849</span></div></div><div class="card"><div class="top"><span class="name">林育政</span><span class="unit">主計室</span></div><div class="nums"><span class="num"><span class="k">分機</span>636933</span></div><div class="note">出納（會計）室</div></div><h2 id="u-財務中心">財務中心</h2><div class="card"><div class="top"><span class="name">陳財務長</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638200</span><a class="num" href="tel:0965296461"><span class="k">手機</span>0965296461</a><a class="num" href="tel:0285099170"><span class="k">☎</span>8509-9170</a></div></div><div class="card"><div class="top"><span class="name">俞副財務長</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638203</span><a class="num" href="tel:0932493933"><span class="k">手機</span>0932493933</a><a class="num" href="tel:0285099171"><span class="k">☎</span>8509-9171</a></div></div><div class="card"><div class="top"><span class="name">張政戰主任</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638205</span><a class="num" href="tel:0932493925"><span class="k">手機</span>0932493925</a><a class="num" href="tel:0285099172"><span class="k">☎</span>8509-9172</a></div></div><div class="card"><div class="top"><span class="name">隨員室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638202</span><a class="num" href="tel:0932492795"><span class="k">手機</span>0932492795</a><a class="num" href="tel:0285099170"><span class="k">☎</span>8509-9170</a></div></div><div class="card"><div class="top"><span class="name">事務官</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638252</span><span class="num"><span class="k">傳真</span>8509-9186</span></div></div><div class="card"><div class="top"><span class="name">值日官室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638272</span><a class="num" href="tel:0932493967"><span class="k">手機</span>0932493967</a><a class="num" href="tel:0285099778"><span class="k">☎</span>8509-9778</a><span class="num"><span class="k">傳真</span>8509-9779</span></div></div><div class="card"><div class="top"><span class="name">黃組長（綜合計畫組）</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638249</span><a class="num" href="tel:0965295027"><span class="k">手機</span>0965295027</a><a class="num" href="tel:0285099185"><span class="k">☎</span>8509-9185</a></div></div><div class="card"><div class="top"><span class="name">綜合計畫組辦公室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638244-269</span><a class="num" href="tel:0285099186"><span class="k">☎</span>8509-9186</a><span class="num"><span class="k">傳真</span>8509-9187</span></div></div><div class="card"><div class="top"><span class="name">李組長（財務管理組）</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638209</span><a class="num" href="tel:0932493928"><span class="k">手機</span>0932493928</a><a class="num" href="tel:0285099176"><span class="k">☎</span>8509-9176</a></div></div><div class="card"><div class="top"><span class="name">財務管理組辦公室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638210-220</span><a class="num" href="tel:0285099177"><span class="k">☎</span>8509-9177</a><span class="num"><span class="k">傳真</span>8509-9178</span></div></div><div class="card"><div class="top"><span class="name">王組長（主計組）</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638223</span><a class="num" href="tel:0932493926"><span class="k">手機</span>0932493926</a><a class="num" href="tel:0285099179"><span class="k">☎</span>8509-9179</a></div></div><div class="card"><div class="top"><span class="name">主計組辦公室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638224-229</span><a class="num" href="tel:0285099180"><span class="k">☎</span>8509-9180</a><span class="num"><span class="k">傳真</span>8509-9181</span></div></div><div class="card"><div class="top"><span class="name">梁組長（經費支付管制組）</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638230</span><a class="num" href="tel:0932493929"><span class="k">手機</span>0932493929</a><a class="num" href="tel:0285099182"><span class="k">☎</span>8509-9182</a></div></div><div class="card"><div class="top"><span class="name">經費支付管制組辦公室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638231-242</span><a class="num" href="tel:0285099183"><span class="k">☎</span>8509-9183</a><span class="num"><span class="k">傳真</span>8509-9184</span></div></div><div class="card"><div class="top"><span class="name">黃組長（臺北財務組）</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638293</span><a class="num" href="tel:0931491277"><span class="k">手機</span>0931491277</a><a class="num" href="tel:0285099227"><span class="k">☎</span>8509-9227</a></div></div><div class="card"><div class="top"><span class="name">臺北財務組辦公室</span><span class="unit">財務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638294-332</span><a class="num" href="tel:0285099231"><span class="k">☎</span>8509-9231</a><a class="num" href="tel:0285099234"><span class="k">☎</span>8509-9234</a><a class="num" href="tel:0285099236"><span class="k">☎</span>8509-9236</a><span class="num"><span class="k">傳真</span>8509-9240</span></div></div><h2 id="u-國軍同袍儲蓄會">國軍同袍儲蓄會</h2><div class="card"><div class="top"><span class="name">陳主任</span><span class="unit">國軍同袍儲蓄會</span></div><div class="nums"><span class="num"><span class="k">分機</span>252263</span><a class="num" href="tel:0932492794"><span class="k">手機</span>0932492794</a><a class="num" href="tel:0223937673"><span class="k">☎</span>2393-7673</a></div></div><div class="card"><div class="top"><span class="name">會本部</span><span class="unit">國軍同袍儲蓄會</span></div><div class="nums"><span class="num"><span class="k">分機</span>252265-8</span><a class="num" href="tel:0223935082"><span class="k">☎</span>2393-5082</a><a class="num" href="tel:0223935084"><span class="k">☎</span>2393-5084</a></div></div><div class="card"><div class="top"><span class="name">帳稽組</span><span class="unit">國軍同袍儲蓄會</span></div><div class="nums"><span class="num"><span class="k">分機</span>252284-5</span><span class="num"><span class="k">分機</span>252269-70</span><a class="num" href="tel:0223952307"><span class="k">☎</span>2395-2307</a><a class="num" href="tel:0223952308"><span class="k">☎</span>2395-2308</a><a class="num" href="tel:0223923085"><span class="k">☎</span>2392-3085</a><a class="num" href="tel:0223929418"><span class="k">☎</span>2392-9418</a><a class="num" href="tel:0223935080"><span class="k">☎</span>2393-5080</a></div></div><div class="card"><div class="top"><span class="name">儲蓄部</span><span class="unit">國軍同袍儲蓄會</span></div><div class="nums"><span class="num"><span class="k">分機</span>252271</span><a class="num" href="tel:0223952309"><span class="k">☎</span>2395-2309</a><a class="num" href="tel:0223952305"><span class="k">☎</span>2395-2305</a><a class="num" href="tel:0223952300"><span class="k">☎</span>2395-2300</a><a class="num" href="tel:0223959804"><span class="k">☎</span>2395-9804</a></div></div><div class="card"><div class="top"><span class="name">國軍同袍儲蓄會傳真</span><span class="unit">國軍同袍儲蓄會</span></div><div class="nums"><span class="num"><span class="k">傳真</span>2341-4312</span></div></div><h2 id="u-帳務中心">帳務中心</h2><div class="card"><div class="top"><span class="name">王主任</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638100</span><a class="num" href="tel:0965292669"><span class="k">手機</span>0965292669</a><a class="num" href="tel:0285099190"><span class="k">☎</span>8509-9190</a></div></div><div class="card"><div class="top"><span class="name">鄭副主任</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638101</span><a class="num" href="tel:0932497806"><span class="k">手機</span>0932497806</a><a class="num" href="tel:0285099191"><span class="k">☎</span>8509-9191</a></div></div><div class="card"><div class="top"><span class="name">值日官室</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638119</span><a class="num" href="tel:0285099195"><span class="k">☎</span>8509-9195</a></div></div><div class="card"><div class="top"><span class="name">錢科長（綜合計畫科）</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638152</span><a class="num" href="tel:0965295898"><span class="k">手機</span>0965295898</a><a class="num" href="tel:0285099193"><span class="k">☎</span>8509-9193</a></div></div><div class="card"><div class="top"><span class="name">綜合計畫科辦公室</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638121-9</span><a class="num" href="tel:0285099194"><span class="k">☎</span>8509-9194</a></div></div><div class="card"><div class="top"><span class="name">人事</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638120</span></div></div><div class="card"><div class="top"><span class="name">傳令室</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638119</span></div></div><div class="card"><div class="top"><span class="name">檔案</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638155</span></div></div><div class="card"><div class="top"><span class="name">收發</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638129</span></div></div><div class="card"><div class="top"><span class="name">許科長（帳務決算科）</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638128</span><a class="num" href="tel:0285099196"><span class="k">☎</span>8509-9196</a></div></div><div class="card"><div class="top"><span class="name">帳務決算科辦公室</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638130-147</span><span class="num"><span class="k">傳真</span>8509-9198</span></div></div><div class="card"><div class="top"><span class="name">彭科長（軍費審核科）</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638103</span><a class="num" href="tel:0285099192"><span class="k">☎</span>8509-9192</a></div></div><div class="card"><div class="top"><span class="name">軍費審核科辦公室</span><span class="unit">帳務中心</span></div><div class="nums"><span class="num"><span class="k">分機</span>638105-118</span><span class="num"><span class="k">傳真</span>8509-9197</span></div></div><h2 id="u-常用電話">常用電話</h2><div class="card"><div class="top"><span class="name">本部電話故障台</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>111</span></div></div><div class="card"><div class="top"><span class="name">勤務大隊調度室</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639136</span><span class="num"><span class="k">分機</span>639152</span></div></div><div class="card"><div class="top"><span class="name">工程隊</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639200</span></div></div><div class="card"><div class="top"><span class="name">江蘇總機</span><span class="unit">常用電話</span></div><div class="nums"><a class="num" href="tel:0223116117"><span class="k">☎</span>2311-6117</a></div></div><div class="card"><div class="top"><span class="name">本部高級值日官（高勤官）室</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>634901</span></div></div><div class="card"><div class="top"><span class="name">本部值日官室</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>634900</span></div></div><div class="card"><div class="top"><span class="name">本部會客室</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>638803-804</span></div></div><div class="card"><div class="top"><span class="name">本部博愛2號門</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>634923</span></div></div><div class="card"><div class="top"><span class="name">本部維管中心（空調）</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>634910</span><span class="num"><span class="k">分機</span>634912</span></div></div><div class="card"><div class="top"><span class="name">製證室</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>638801</span></div></div><div class="card"><div class="top"><span class="name">本部合作金庫</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639500-501</span><a class="num" href="tel:0285099188"><span class="k">☎</span>8509-9188</a><span class="num"><span class="k">傳真</span>8509-9189</span></div></div><div class="card"><div class="top"><span class="name">本部土地銀行</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>638334</span><a class="num" href="tel:0225327758"><span class="k">☎</span>2532-7758</a></div></div><div class="card"><div class="top"><span class="name">本部郵局</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639502-503</span></div></div><div class="card"><div class="top"><span class="name">勇固樓1樓福利站</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639510</span></div></div><div class="card"><div class="top"><span class="name">博愛樓B1福利站</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>637720</span></div></div><div class="card"><div class="top"><span class="name">醫務組值班醫師</span><span class="unit">常用電話</span></div><div class="nums"><span class="num"><span class="k">分機</span>639002-003</span><span class="num"><span class="k">急診</span>491486</span></div><div class="note">急診 491486</div></div><!--/STATIC--></main>
+<main id="list" hidden></main>
 <footer>資料來源：國防部主計局電話使用一覽表（115.10.16）。分機為軍線；手機與「☎」市話可直接點擊撥打。</footer>
 
 <script>
-// 欄位：[單位, 姓名/職稱, 分機, 手機, 市話(☎), 傳真, 備註]
-const D = [
-["局辦","謝局長","636800","0965296380"],
-["局辦","辛副局長","636801","0965296154"],
-["局辦","徐安佑","636802","0932493948"],
-["局辦","（局辦）","636803","0965295798","8509-9203"],
-["局辦","本局值日官室","636929","0932490138","8509-9168"],
-["局辦","本局傳真機","634025","","8509-9169"],
-["局辦","本室第三會議室","636842"],
-
-["計統處","梁處長","636856","0932493945","8509-9208"],
-["計統處","林副處長","636867","0932492900"],
-["計統處","計統處（市話）","","","8509-9209、8509-9210~12"],
-["計統處","莊科長","636861","0965292969"],
-["計統處","胡科長","636865",""],
-["計統處","黃于芬","636836"],
-["計統處","黃智強","636877"],
-["計統處","曾婕","636839"],
-["計統處","陳彥全","636878","0965295026"],
-["計統處","洪慈君","636857"],
-["計統處","李逸珊","636880"],
-["計統處","廖偉茹","636864"],
-["計統處","李政翰","636882"],
-["計統處","游茹卉","636862"],
-["計統處","羅翊輔","636884"],
-["計統處","（未列姓名）","636858"],
-["計統處","李昕恩","636883"],
-["計統處","梁朝翔","636866"],
-["計統處","馮崇維","636885"],
-["計統處","林惠珠","636873"],
-["計統處","張誌良","636886"],
-["計統處","張業承","636875"],
-["計統處","劉虹君","636887","0932492878"],
-["計統處","賴聰松","636876"],
-["計統處","張立蓁","636928"],
-["計統處","陳德恩","636872"],
-["計統處","（未列姓名）","636871"],
-["計統處","高靖閔","636881"],
-["計統處","文卷室","","","8509-9220"],
-["計統處","檔案室","","","8509-9221"],
-["計統處","劉超凡","636837"],
-["計統處","黃美玲","636863、636840","","","","636863 文卷室；636840 檔案室"],
-["計統處","張文馨","636838"],
-["計統處","邱明鈺","636869"],
-["計統處","交換電腦","636874"],
-["計統處","林伯樵","636870"],
-["計統處","王淑霖","636868"],
-["計統處","雲端服務網駐點工程師","636860"],
-
-["歲計處","嚴處長","636809","0965296353","8509-9204"],
-["歲計處","蔡副處長","636835","0932493054"],
-["歲計處","歲計處（市話）","","","8509-9205~6"],
-["歲計處","陳科長慶華","636810","0965292784"],
-["歲計處","陳科長啟祥","636825",""],
-["歲計處","郭育廷","636811","0932492892"],
-["歲計處","申佩鑫","636826","0932497807"],
-["歲計處","謝承堯","636812","0932497829"],
-["歲計處","吳政謙","636827","0965292997"],
-["歲計處","林明遠","636813","0932492792"],
-["歲計處","陳宏政","636829","0932493935"],
-["歲計處","黃致學","636814","0965292782"],
-["歲計處","陳文成","636830","0932492793"],
-["歲計處","蔡欣妤","636815"],
-["歲計處","（未列姓名）","636831","0965292993"],
-["歲計處","陳偉哲","636816","0932492795"],
-["歲計處","黃仁隆","636832","0932491867"],
-["歲計處","黎文舜","636818","0965295024"],
-["歲計處","童紹澄","636833","0932493927"],
-["歲計處","吳孟蓉","636820","0932492006"],
-["歲計處","謝欣倫","636834","0932491009"],
-["歲計處","（未列姓名）","636821"],
-["歲計處","（未列姓名）","636817"],
-["歲計處","詹昌祐","636822","0932497811"],
-["歲計處","（未列姓名）","636819"],
-["歲計處","劉達","636823","0932493073"],
-["歲計處","王瑞君","636824"],
-
-["特種基金處","林處長","636888","0932493053","8509-9215"],
-["特種基金處","周副處長","636897","0932493940"],
-["特種基金處","特種基金處（市話）","","","8509-9216"],
-["特種基金處","張簡逸中","636889"],
-["特種基金處","張婷雁","636896"],
-["特種基金處","褚冠瑋","636892"],
-["特種基金處","柯彥良","636898"],
-["特種基金處","謝正軒","636893"],
-["特種基金處","陳威吉","636899","0965292781"],
-["特種基金處","張玉佳","636894","0932493936"],
-["特種基金處","羅巧芸","636900"],
-["特種基金處","朱純嬅","636895"],
-["特種基金處","（未列姓名）","636901"],
-
-["財務會計處","林處長","636903","0932493949","8509-9213"],
-["財務會計處","李副處長","636905","0931491276"],
-["財務會計處","財務會計處（市話）","","","8509-9214、8509-9293"],
-["財務會計處","李科長","636904","0932491552"],
-["財務會計處","劉科長","636924","0932498088"],
-["財務會計處","（未列姓名）","636906"],
-["財務會計處","葉昭輝","636916"],
-["財務會計處","王廷軒","636907"],
-["財務會計處","陳則融","636917"],
-["財務會計處","（未列姓名）","636908"],
-["財務會計處","何蕙如","636918"],
-["財務會計處","邱俊樺","636910","0932492894"],
-["財務會計處","歐思含","636919"],
-["財務會計處","蔡明達","636912"],
-["財務會計處","連緯育","636921"],
-["財務會計處","黃誌堂","636913"],
-["財務會計處","黃柏文","636922"],
-["財務會計處","黎蕎緁","636914"],
-["財務會計處","陳曉緣","636923"],
-["財務會計處","林月秀","636915"],
-
-["主計室","邱主任","636844","0932492891","8509-9217"],
-["主計室","主計室（市話）","","","8509-9218~9"],
-["主計室","謝科長","636854","0932493941"],
-["主計室","科長","636845","0932497810"],
-["主計室","尹作民","636851"],
-["主計室","陳俊傑","636846"],
-["主計室","連惠珍","636847"],
-["主計室","林信潔","636931"],
-["主計室","胡淑雯","636848","","","","出納（會計）室"],
-["主計室","於維芳","636849"],
-["主計室","林育政","636933","","","","出納（會計）室"],
-
-["財務中心","陳財務長","638200","0965296461","8509-9170"],
-["財務中心","俞副財務長","638203","0932493933","8509-9171"],
-["財務中心","張政戰主任","638205","0932493925","8509-9172"],
-["財務中心","隨員室","638202","0932492795","8509-9170"],
-["財務中心","事務官","638252","","","8509-9186"],
-["財務中心","值日官室","638272","0932493967","8509-9778","8509-9779"],
-["財務中心","黃組長（綜合計畫組）","638249","0965295027","8509-9185"],
-["財務中心","綜合計畫組辦公室","638244-269","","8509-9186","8509-9187"],
-["財務中心","李組長（財務管理組）","638209","0932493928","8509-9176"],
-["財務中心","財務管理組辦公室","638210-220","","8509-9177","8509-9178"],
-["財務中心","王組長（主計組）","638223","0932493926","8509-9179"],
-["財務中心","主計組辦公室","638224-229","","8509-9180","8509-9181"],
-["財務中心","梁組長（經費支付管制組）","638230","0932493929","8509-9182"],
-["財務中心","經費支付管制組辦公室","638231-242","","8509-9183","8509-9184"],
-["財務中心","黃組長（臺北財務組）","638293","0931491277","8509-9227"],
-["財務中心","臺北財務組辦公室","638294-332","","8509-9231、8509-9234、8509-9236","8509-9240"],
-
-["國軍同袍儲蓄會","陳主任","252263","0932492794","2393-7673"],
-["國軍同袍儲蓄會","會本部","252265-8","","2393-5082、2393-5084"],
-["國軍同袍儲蓄會","帳稽組","252284-5、252269-70","","2395-2307、2395-2308、2392-3085、2392-9418、2393-5080"],
-["國軍同袍儲蓄會","儲蓄部","252271","","2395-2309、2395-2305、2395-2300、2395-9804"],
-["國軍同袍儲蓄會","國軍同袍儲蓄會傳真","","","","2341-4312"],
-
-["帳務中心","王主任","638100","0965292669","8509-9190"],
-["帳務中心","鄭副主任","638101","0932497806","8509-9191"],
-["帳務中心","值日官室","638119","","8509-9195"],
-["帳務中心","錢科長（綜合計畫科）","638152","0965295898","8509-9193"],
-["帳務中心","綜合計畫科辦公室","638121-9","","8509-9194"],
-["帳務中心","人事","638120"],
-["帳務中心","傳令室","638119"],
-["帳務中心","檔案","638155"],
-["帳務中心","收發","638129"],
-["帳務中心","許科長（帳務決算科）","638128","","8509-9196"],
-["帳務中心","帳務決算科辦公室","638130-147","","","8509-9198"],
-["帳務中心","彭科長（軍費審核科）","638103","","8509-9192"],
-["帳務中心","軍費審核科辦公室","638105-118","","","8509-9197"],
-
-["常用電話","本部電話故障台","111"],
-["常用電話","勤務大隊調度室","639136、639152"],
-["常用電話","工程隊","639200"],
-["常用電話","江蘇總機","","","2311-6117"],
-["常用電話","本部高級值日官（高勤官）室","634901"],
-["常用電話","本部值日官室","634900"],
-["常用電話","本部會客室","638803-804"],
-["常用電話","本部博愛2號門","634923"],
-["常用電話","本部維管中心（空調）","634910、634912"],
-["常用電話","製證室","638801"],
-["常用電話","本部合作金庫","639500-501","","8509-9188","8509-9189"],
-["常用電話","本部土地銀行","638334","","2532-7758"],
-["常用電話","本部郵局","639502-503"],
-["常用電話","勇固樓1樓福利站","639510"],
-["常用電話","博愛樓B1福利站","637720"],
-["常用電話","醫務組值班醫師","639002-003","","","","急診 491486"],
-];
-
-const split = s => (s || "").split("、").filter(Boolean);
-const digits = s => s.replace(/\D/g, "");
-
-// 把「638244-269」「8509-9210~12」「252265-8」展開成 [起, 迄] 數字區間
-function range(tok){
-  let m = tok.match(/^(\d+)-(\d+)$/);            // 分機區間：638244-269
-  if (m && m[1].length >= 6 && m[2].length < m[1].length){
-    const a = m[1], b = a.slice(0, a.length - m[2].length) + m[2];
-    return [a, b];
-  }
-  m = tok.match(/^(\d{4})-(\d{4})~(\d+)$/);        // 市話區間：8509-9210~12
-  if (m){
-    const a = m[1] + m[2], b = a.slice(0, a.length - m[3].length) + m[3];
-    return [a, b];
-  }
-  return null;
-}
-
-const rows = D.map(([unit, name, ext, mob, tel, fax, note]) => {
-  const nums = [];
-  split(ext).forEach(v => nums.push({k:"分機", v}));
-  split(mob).forEach(v => nums.push({k:"手機", v, href:"tel:" + v}));
-  split(tel).forEach(v => nums.push({k:"☎", v, href: range(v) ? null : "tel:02" + digits(v)}));
-  split(fax).forEach(v => nums.push({k:"傳真", v}));
-  if (note){ const m = note.match(/急診\s*(\d+)/); if (m) nums.push({k:"急診", v:m[1]}); }
-  nums.forEach(n => { n.d = digits(n.v); n.r = range(n.v); });
-  return {unit, name, note, nums, text:(unit + name + (note || "")).toLowerCase()};
-});
-
-const units = [...new Set(D.map(r => r[0]))];
-let unitFilter = "";
+const PAYLOAD = "FmhAEKM0gX11tERMik+vYqdB4ewv2nQBMyThbGzQ8XUNgUGOwY2U8Sfo9PjJUkQ5o40shg+uuDOtqHX4Ly78DFIuPy3XR5xpfrNabtd8wxaENzqungiAcL5jyWx4J3oS/ugmuP+G1pBotI5TPp2EYAwgEJYepk1Ma3uMAd5OTaZk9s4eWUlw65DdNROuPPtZoyczsCeEzYAJorJC2NqnPdTYNXf72zPQNaixETxWlpg1NoJqjfqM6Y19oiW6Q9rZkfTU/YU4+X8wy5f4NCH01EHAG91d7PTtvV/2Bic+tp89B/MZR7Xi/Zh042UF6EJPCQjTlVu+Ts7IbIfscQwo8/0gupcDx1k2UZSmSDcApHI0qxSfsyiROjKp36GJEHsG+OISprVBSBuPtog14jiU75oY8HjMESLCh4GjgTbX+L0nppklSGy7EoK3VJBe9hDVh90/IznhLV1N9IOPtYqPoIklEZqY/EDe/Uit3NcjEEErWa8Vw9WOk8A2l+Cu31jyryWKF1IRAr7aH02ejGeeoWBZzMJ6czYhopjC3g6Nad1nCU+ZlJYhV2F2YNfB56peznchCfysiYgSeM10mAQA8f7ZzOuMuZeU1gMaTqqSzodvT9ciTGqDh46TMHET2356DzxAsDdmXuYF90zeV8cZKroj5pFafJKPsk/b881LI4Qtku1klNuZnFdBNtTngH+m98ItBiwgBUivrqmgrawSrOQQ4SniA4PQDxH12iaxj4QdKFtKvFGlOQKHEF3N1VXVc7u115IZ6Gm73Wxy1leFcCTndkk2a7gOW3DZ2E1sMDdT4o6U9RL9vIab8gYg9uSlT1TyAO+JFaqAA21hih1TmfGm7XcrtMKxD3+kOPZkwCj0Orac/AYSuSOhXe46FTqbBxQsrZ2Enkljn16PP+I3w3oAAWUxgKNdCZ0eKvR9n3mCVBoAT/c2iBUdKPuB8h/EgKLTYO9b4q4RfhoESGzzggAdI+kYiEElB1VwsRclmnQ/2/49MMi738nCd3YSPzYaeujAOBimW2HbRJSyoauO2IE4+EcDyPuZU0q6pqjKCWEn/u48OX8OsxcGczDV438J02uIksjMG3I8+7+kVYAt/hhPU0eeauBV88v8rBs+6521RikvHGRaiPbRIZuPcT+y5ESRD+gJFdHT9u8thj1nU2HnJUS+bbE7nVRSTx/tyJ7cGtsVKM37ta8MiMF8hMxo/DbIYiJhmL7DF4vdWxkIPL/5taFPhUD+XZt9P5mGbAZGO9N0OQ3VHDs2GagD1/Y/oforCloF64IYD5I8JFzSjg+iVM6gYRkC+8QWJug9us+iW94Jy4TSZ95XbjgbnXz8JfQgi3UaTtIAjHBwLzq5Mq0eLttfVZ29+qNt1Tg3nFZLRqb7KypGulKRW/YBDYWWotQcfe1oc8Xa8z+cIJFIhmnhcJjvpVnqOxitfUjQ0NN4yuSM4qnVdO6OngOYCFoo9jnkmIOBHUT+wvFaM2a6T4UekZTvR7RG1OWS9Ur3Amre9cnOiI06ShNztHPex9rX82+fCuP7OStjYDNskpCqbhPwv1TbxZOgdvNXoaf1+4k5r66IzEEQK15WfcY1MwBmQAz1DwpIj8cW7H5lZegd/7UQGcJ5zmbuvxX7OiDx5PQ8SwtZ2AWfx315iBYXYyfQWaEPQZdrsvM4aRKwVaIYvQDS2bqNt3uEaoAkA5fHzollGmFb2VSDWnAcOi00oHnr4mMyQYiVzOUJjaxlDsKu/yK6h8ISdQQWIahfU/LKoufmEauRr5AuxjI4hetbK1+56NFqkNFNdo6mTQTNuK7pnPsPiRvyt5/v+rOKcRmlS0qXYkDhniMQaNYltyttdcO/KDD8X+tsv5qK/BPoHGphKRrD3fSliLyIBfnOya+n8coyWGzJr0GybPFFu+Rjn95Z26ANPGKPyJU33i5T8Nc3Sr+jPHTZ9a+F31fhtw1wLEkGtcQfbLX7vHpHQaGUUFaR+Y80S47GTJcOEv2vkt6/poSRz5eWuqO4KVY/sPp96J7KSktJY+jCBEiEherzFYFHt+ERr10eItQw4p5AANN2TYHNP43FJ2ySY9O2GypRzRe51rqTfaHIVLWQn72b2JHhn/Vkwm7oKuO6fy1PEMvmv7IkQS1sslzDn0g513gETP9rfSsjusCX9/s6+RQMIhy3OEi+W/a5UCbIxooBNVfR2kNBcngcgLVIsqL+NXGm9nADMkCviOFqs3HfagMPNaBl8Okp0Gr7Us1Kig5jlJQTn4ii4kAj79vHQvohhU4V8dX+0wp47D3dt9n3QXovk8kPo+FkmeL0LbGE/9tXGTezsre223AFp8YVuGd6EbWlAM83fUbpyV6JnNUmW5aME6GqlNe7csewtnc8QYBChM1qy9wMKRRee2toqQAvHJ9PE7jLdiVT4pEINEpQGLEpeNXUbLtj6Z0+I0tCFXIM1lEbmuzo4Q+S3zUFV+dt4YnJdBFb2cQoBTddS2kgFqbV22eD499eMvwkKLNRd1SgH7W1lzQzatqSE+XJYNOcasvPGl7SRyUc/iMMZl85XwLfucByzSTXjvqWU6Hd/4y9ye1CQ3ig08nbevqP+G2abyZIWEPzzrC+xRTSYuQHE/9RM8pbBmZUvdMOu3fG8/gpaxBdLO9EmaS9O75lSWiGik9uBDQ0JlA7a0w2UmMfL4TOF9YY4D2VUKU9B0GSSJHjkqEmcYdBekTkzo72vzjRSa6/cxUSP9riGUsWJ3Wn6YBl58xofoUZ2pGuQSqgkWhLVRpsZOEC0PqOqLeFXl4HnV1Sd+x8AaDXMg66mdgIkmwUqpHlVvdEOxoXc/iIR9cOBErJIki9kWO19sQCnh+X3nUDA/rJqKGtchlJGyRL02fuLziyXZCxZ45Lr8fLZR5yIunyWZoVgEkXD3HctIhPxb7GyZabWVoykPKigadOOAfEbSnugiaQTF3AawiG6Rdnn98aBKDb0QepHlyeiWKxZ74tXcckncdx7q7pTXoIWKVQG1sCtqZV+YdnplgMcUPd1RQU7srdTQ5b3/TwDEaqMclADdtnO4RbebiqE+J/rdXGlRNzog5gQVpEShMJVYf39QezWFGQxEx1+ED5ZTlCODzUUuyvs2P1QMciWb839jq54pmzEOH/b7G2vLWtBDwevTkW8Vgojmp/ijaJwQbkAm4A+Go3KbPIo+uodFv2oHiabgqEd1ykec6u5E4/wKWsC6jwLo3DPxdQES9nTJFy36W1vbEhzSYl49hMUu5uE66xTZOhJBRKQwZYWyuwDNnMw+OfkAmuA0bTK+PLwGdCJn8qMqPBRCCuEQiUrjzboQYNjd/8lWhJbAnlGWCsXaOP8MMKPuoL9R4bcZAGwHFkikhzM+I36fQiiLaCMiKC/fax4UmoaaDjIF3r/Mm5bSlPR28woOWS0I9I56zHgNr2Ef921QmBuGfoM32XWhm5SNZd9eX8ZZSFIw1sYlxhQjVRnMUf97i3MCWPbRwXQ+p6jvUuguM3U5//WWfAv1/s5UqYxfLXbaJNT7cdinFnOaBrApR6QLwztKQOnST/DNNuIARVNs8zQw3rL5v+l6qXbu6blYRq1OZuFGsN6ZxriktpPlDp0D7+RZegEDkuaxLiKKv+ZpuZARdqz+J/zKHZJQwW6WJblSHavFIW9HqKZVEI2cA1VO+VzvR7qQu+bKDUpH04XPgCAasjXbeCO7nkCHLFqUYRMHh4p9y2XEpFFj2zCO1X+iev8/kKYmW8mR2J5QlW4L9SMZ4rKisKmfSSvZ/lP9qHmN3MEd7PVLMzAlAYYqDUPWC4TQT1bSm5wPVOD94Yv/YxTAOGCFBPcwNBoPUDKxeH8Q+jAW9JKsn/hwjYN+0aPkVJsJsN+K/qXWgraXIwffKN5Ey2Jnkqn0A6lSZyd/Q58lbHsK+bA7FkVsOE5peK92zXLPHR/jxOXByB+XPqYBOycG7mn1BWDQ98QLj6OEIRbtrkM2kLPApoQF1jOycrYJXRoVYKQ77saPgXLlTrCPYqxhjzCyqBkja8/rFCbbbcA5ZaHZHDQp/OlB0ogPMmmsJRb3TAGmhi4vmSKDuaNS184s8HxkBbGxnvPMFPNOokv5HFsbvC+QkvABb7uFSokLJRFEPSBDEPWG8hXZvm3G7EiT+Hh8M9Yy62OPUOqtVLTxcRTnaT1rmKrv6LU8sebTX78LSBwcG17xX87kgYSRVgAerAYWqA2BEM+gnImc1SaH2ZdIsjAuG3LevwN0Yj3mzdYHsMFW6fhMHBiiFsdMUv/MoEw8+2/a/Vhyl4L9lKqYwSW8YhBkOK41pv1c4pjVZqUCW7PAyGrdZzs6vuOygAZjFXWjLmT0X9C5lIlmbVwz9Z9wBnts4wtNwyzfIaPrKGWrOJM7+f49wQkn9nuOqx3rBJvGVrXGYlqbo/rQUi+ihM75Yc5mZP/JrICXsU+eGzITmicg5leSRJMrYsfvhgMlVKw/VlXseLVcsa3VKBD60LopumcbdkC6aHEHwleLPcWAX+vSK4OFPbQymfWXSeDP7rBaErislOtKWyDYdAE9MLTaslzSNI4YZ52hCcKwRNcjE+HZK3jYHsLC5UA3gMDk7y6bkt0qFNjtlOI8gPeT4ap/Wq9EeltLUq10AJsu36wPPi2vNRpRlNFpDJH2tPW3CGCIsB2ShCRxIrBAuQeYbCpsfRccKf+vaGEVsniJmJgZ1dikwSC2K0y9YjQnDLxNez32DDJ0n/nebBiCzei7ddkHVHSA5Xz8SQomnRqo7Fc9m58d0JdKCKXDLboYdKW7wPn9IqQJkQwaY24zIuMP0P4cLkpItNkwN3/AAd1QX3A1zCZwr72My39oRo4Mmlb7CBWhkOJ05u3Gf/xtPhVBNflWAquL6e3xP3PRQURTblM2fYUg+o394W7xtocWddpgB47igrYT9irdBwhz4TYIhsZC+oKBuxZlg2Wrm7lKye9OvzeiX/SPvMdLffzKxg4FzdsaMW9UODYHugXZXjU6bZXWLukLeyiAJtbPODO1LB0QHEAGLQgWwOnJxQBxNQDkVU4+M8sGvr42CNkKq+dE6h/LspqvNUjFtJ2XxJlLIsnQ33qO13fcFm7qnzyNS952R7rmW5/eeK8HGmXpshCqXnq8fdkL7YWA590lH63FCHWeeIcKh7+oUmaT3YrXqKurOZaIsU3EZmRJvBlwsdbbnmx+wqQ1uObyWiXqY61/OOJpLIMmegvmkgKbGSRJeVFRXrp4kdP/teitazoVjpDdm2FViE+E7+1O3nsOOs7JyWA4crd3Fgs808M16dOZiylaLRxuHfdPCS106NpckEAOtPtMjKxPbggIuui6oWv9jBQFomEKyFxjaZvo/ePf63E+r3Ds1ULUafJRZaAEJYsFPIrNM2SFRFQYskJpi4QQ7t3PgWZpdauew7Vyos6WHJsb48RA3LH6PO4ef2ZOVmTEejoYXtGToPUD3+4wXLTsdUqlx4+hawZb4NEDNMeX/vmndiQ/F6ZzMMu95paYUpFXuAq2I4WhkWQKQckxxdlIRjNEEwWPLYErKbhAkuHA9H00vTDiBd1lKysYnPGOdoWE5n4huP9MFQ4ohHxgRWmAkvW1JAebf+uWS8AqsbCv4J7qc6TE3vhqb6H0kTZ4eKKgffCuEq/cZyX7GMfhLnSoFWrbOiGUT6lbJbQ9PgKHWM8jGa11pmTHD7znZDUfQWmt/nilsdJLpsc+vzzFMiOqLh/ONJXFL3gt5wH6ei3gFfEWeV22pT8O0+rs88yCuUMk0Evo81ra6KiAyJyoPIH2fzq0q5V7Kh9pQ0g7fY0pRkT7kxfax3bLB40euNtpab1ANBYrr61EAA6MUQkayJDsXr83fnykXzFDnBWMXcjcIu0btoTAaIHwB/YkfcdnkXWBmViHwp8tfl/sJ+PR3dtTl1AeePyNW/FCSaFX52Vuzv4/PzmRTyglj4lH+Z0Rvk3sbjibU/njqS7SsJYmecWi/nnvqegkqWDVfbtvq45eHw0BBvHwUdE7sdJzHgAz3Ru3nQcBOtOovdaitNmB1Xm6lW9aezIYaoAz2ElS7LoNDljP2AuBL25BPofvH83GkgSF3IsOu5pfEjqPKCMFrLdoRlkJa45vUi+yiGRGeftnauCSf47W0YpCPhF+0IXUQUZr5s7M8dDMTv2tnkvWI8mrxJFTFD8+2pHoe+ZwZ2aJjtOPNzDDPYfQVvVThh1rsD/dP4eEsa01NZqnMUQsyG58FIGTUFioVbyaZSgTTm6qB6V80lNkxMtkjhUciz/erKLaXvvJhyUukMJNqAF7m2aMNaCxNWvplPbhGBcpOkxAv9y0Gz1PZ4ykyvKrrxXJWChmKwl1Z3tnq2GBfSAhXikPvUU11VrK5v0ki++oj+H3D0GbYB3Pw4ZU4JKt7u1qSp+lihSbeCryUuiyC77xac2vZJoIXc6ExiIdlk2XMQ3aZZkqAKUTh1necHWXKI7/lbgt7w8qIFo7/o2bvfvozFe5a9pC+rWrsVPRNwUBvc1lKpv/5wuvuGBWdRe/vg0OqzRw0bwa+L6L/KsgoWKhw1UYmi7kEfcb2kQ8HsbmJK86PmZCp8ZlhsrawWhl0a9PvtT1+AXFFCHxH/Hs+fIeDHro0Q1eG9KsLq1h41AL+2rNan2TP1isOV4wZJ/2YRo8J9ywn0eJpZ9WU+dGZZHmKMACHhmtC5aYA8KQSUuAiBjmkt9fjIxHTuY20IDaSnBG0TFRHBL4fPQtYDVx9MOSgc6sVY3ybjaIvSD/1T3tHmoWOhS33KqM7bgTm2RxdqUSUa3J2dTU6Df5aqTaIcm8CMSCP2M2jOfU2upab4/O6IxrbAKcTxvVn2VUkN3TsvfHg9k//ljvTIQdWMoJZQ6aQsEs87tSDwSZQYjlYOMs29QvrFLLIMj8wOX2QaOF/3UoktWauDfUqacI0JTjab4kZWifFGxyabA8uq2fczdpTMF74qi3PHTc3iBaOzo6SscgS2pFWVe28RsjAGV/5PlNJp6zyFZmILJBrdVPbbQSi8Xa8FcvrF5wsUv2MDgSKaOpOdIBMSfdxNV0hj4zAGUTrva5Vbw2Cx0AYitj/KPh1B8kgyGxVaU8VoCA9L9033K6YXS2N80PNkZ9Py0DVSNxV/TNcw4hOv470+DWJ+8wQudZEuR4MHGTYKlcgtmcPlUe5Z0w4Rs1k4CO+nzhfgPrr+8+NVJcKrUDl2mtsXC03dl5fyog8BhZsuljXq972hQ3+C4ng1t4tN8kSWFtUMLwKKpxlNYUPj648uhDUnLpAaSneee5LbBtJQd/STBFKCnJVXs1H+pEBS9yZgY/iFEbFf3krRtYcdvkOzbL1b9cj0mfHTWMeCbhxQiP7U0bjwpphQYNazmzlCpEtSQIOj+KMhEn2mXbniRJhPz3PDbasjBSccehifSc6iMTd7JI4nskae4hx33u9ZCKPhh/9KsYVJ8kWes5jv6jmNjTAUMjGyvg8tS8Bwpbo/faT0XeOG4yyjRNh0BX+JL5v+np6aeZlAQKUU0ynCJ6CVnJYmP99Iu5xjlQwqwAeCZ+8nDJdJQduzm8HOBl7FWVP1QFns/jPgp89xXoahMHxMHMyc9Fl2MqOcONEfNNzIJ2+iicMyXZ9Nvmv3Bv7kezgE+YR1tla5aRJ5mlQEaRdESOMxlhRh9nrSIUOyMwv/GfUPEB1ALmHxwkkB41dAgd6cQD4JhIgN4K9w93KjH3DPJMshkTCIiu5R/Ihjwn7VpxMcqNDT1w7Lrqn9eY4GQ3tKdKe4VIyy99SqzUUIPYt1iHYaIe3DeePf4ATZIlrxfc4uS+7wE0PgDujftrD43HsoW6j4a/4A+2WqNEyOOpXPOeoxdN7BmSMAQpkGObsPYy5Hk9i+wnh89tBC8h8YKb08EoDP+ZzZmI/Ve4dp/hDEQbaclRasqSzQKMnfHNBQZV5iRjVyRutYqBsLibu1w9AAmghenq4Y2zOZwXtWpafvD7/Wbs+3Y7W63hSNGm8ZdwfzxcPFiJvMcgt+LdTkgXWriKz511L3rYYBdIVEsu283I71o9gJoL/EJyp704/zsuS/dUzd44CLkPLGNwDlIQfFCY5S6928xRSJW9MlzubOzoeW2YD0+nbl1y2nTrAB7MsNNbtRMpMOYZskHzVAuoTFeUKObIoh/7vPgVSz+eBS2MaXl948t/2fA6eYa+vO5uMvB3JNJgqIKRTpQFpW3ZilH3iwmPFh06UgQydvsqPmjLHfQO0sQyoKWI/XaD4tbVcEn5yuuYCWpTAONSCkh5cTsEHeId7vyuK/T9r0OV2OAxqd6QBekpmCCsZVUbnApxTPwrECmXZQgUFY13gJ3C7xCee14HvQy/LIyXdJ/k12LoOMSd0C0cCovkkNf9BEWhyU8kKo4mYw2vAwEdxUlHJKaMn07ZOWi5m2e7+hdFh0VHZ/rjxn/TasahiuvWoFZuBYmbUYPAUifNrIaIvbN+PU6IL76Itkdbu//L2vR6PpAxYfdkT4ZdqUMTtPeG9yLVt2kYq/6dtkZ/836osVt6Ia5fKw5+LAzc3R4Jbnepg+Tx8d9/LScVgArvbLoEeumJvgvfq2DgflmBHGAlq5VikPfEjTy7YMIGTeIVJ7WjEW0mhqGS3zpTEBvUipU4tmidHVeAeQmvqMlOC2hC37RmfQKSUPWfJbuwDFEvzH5vp+4pHgLp49h+nQfTJZbxz5N5kHIHT0o/QB40px9p5SDXkxfpzNGJvj/BEJi1R8Uf2D35twsrw/Pk8Od8nn7cO9IArAD0Txb3uqbb1rCryTIK0m7NAmo+zH7cbr+A7dVqONCh2te74dDwWAnJ/djWEkUpclOY1HrlL07jWXU7hs/zIKWgMUmXYOp4XTf0MzHDc1ZOxT7F8O907ft6j7LbtR2Ug496dLAHy5LGn1awPyxGzNG/3LgeISLEr2Ye/Xq0HOkTpS67WrcCMTIgU1f8FhVaR9EK72YbdAFMt6XwfeDKHkFVulkfwUT1IL6vu4zPCyW/Yh1650eDttScz5UszDj8Z0YRjGUr319mlj3NkGkq3gNDhOZhLK0DvLS2qMbqRvPgDBAYpG7IEtbsVanM5iL+S7FCb1hcP7W7Hs196BGy4VvZsZFtlvRzf0v9piyiLhZzWvUYkL9AiXKCA3u2aiLKtSKuGTcqXuAyvmLEYb0F4Gc10KgR+6YA6e0IH1J6N/9p027AZkSOcJsoEXkt3U4HLqGoPfP75LVtzkvqB/RF8Q9H2q+uvIqdV/D+dbYbYF4rmAZwIRpK4CoLm4T1cwarLPrXSywsJA1/8M9yqJ/1YYVJDEqUUrzMIvumVvjuBdMtbBfsXZZRA3z9TbCPlqbpVsFLLqdD5ARS+7D55Dbq7xRq4oamd4BKitAoQLTTV4G1qPiJrdsLxDzcZNFkzq+6YComEJDSSIIC3jINo+B+35o/WCHe+r5hsWGmXGwzjoTEiXy2wd6e/IaPhLGfYiGzi6QfdJMDhd/dChKTqxLRDRNTjFNSjp9D2tvf6PqUDtlOXpfNiZC2BiKbTUl3cvd8Di9TGwTVqX1ydRV6hx6sKvf03zJnrFZpTXdKawbcSbNOKFHLmh2LYy6NUpstJNzq80Vw9b5jo2J5Gp8+uFKye7R1eKD+tdW+4GQ7sdHm61nxj64EeNd7rnEzelEAGbi0+ZIresWPrENxwBAt01GZ/NsBb3SNHPS8MsOOjl2Vj2b70koEtMFK1HLJmzOgmiIU8SHhk6yS+AOiMu6upCALX/aA1ffNtrVpkYhCRX8OczFawS9DDgi2o+y6bglE5AapRhdqaztkcFw+xagi8Zexihoeqx5g6Lgy/rdaLWYPLoXnsBnNctBBSOQo1qXsd1j5as1aKbYUSwQggGVc2ZosBIGnosaH0/cr3oEMxzrdPh5lj1jDuTusHQg6fx8hF4GDU2v3IHmmUyALnJaEBGreEIB26QmXEyhNp4wHdT/Kjv2iJM131WdHXek6PyIzN4wNl3S4O9I86L51q4rC3oYo/5Rx3KpMq4JEO62keX+ZioGr7xg0gHXyl9wTSq65z5iynybQnCbzCpPnxgk7kKYeZfjHWC8d2XOnYZdeSKXsZcXLqbgqeIc+gyaxoikYZGyL4iaoo82nJ+Uq1n8cPQrUuF99ZWOgE6rRzin02r/MvC6EkYbnKo7I6Jrk/C0RZbusGGixUmcWYps5dVFLyBRrn7q9H0R6LtiKYlv/GqrJZI0eU7QJZjk2O6gcCaBiwYRGo/vmtr+KKdDQS/6RGBS5GW4Y5xHFp0m0B030Q8Lyeh71J4O/bBUItRvlUB42Vf7fHNP9/RF3ma6+8IYYmzmcVa5cutAiVMRhn7S21j1m0JBpNSHVHjRe8wGL0BP/GPTfgMS1oQH6jaysix5c81RJsykFfgolcNBq8hjOhphWaFwalyoHUPbxAhRcFb/0MFAbsKgPcRQ0CehHo0+1ZYIvJ5BuxU4PMruVHGDqzOiOWeDBVO9unHcA34QWDN6eQbWLgqwqVBbzJjHU9MFBUEMjIWuvbP+aiYDd6VSYFraCCg847uh9rblttsE4KGa5Ig8vSJConF7AJvFRAiIpHpPKOfCPO8FVEAkb1+nRY7tk2R/t7iQKOLnG9KMt4iCMORoRJIi0Ga3DXZb+A9wkxn3Q7xTnmyKWUy43OJYRUeRj3oPl8/vlQBUmTv7JiN4kpjWdEQHW1x2LFBKGffaEvFB+SoH2sl0niXLpTiC4Rbty0gtwmsJGLxyMoaoS+zC4O8RKP/ceCLRsHSnbabApxdeseRFtihIowfOdsFSuTFyVfGQCmfoAKnHyw4xYiTS05dQXPv0eSMHWFFRQjLt32QI55eP5vBga1UknxS+bq9yVgZxbYfjk0R9JueoULI4eQzhQyf5/D4Gp9y1RHvkDgSdY22Z67QRW5x8bxd5zDl7G+smBnCX7C3nsrPL+zelFdVQ4mvCdqJO41cYX1nqo/8cTsPK8kaeFHQqLfDEyEuUwp5dhGvIOaprb5nFsIJmdKCcRCE8rMrTijSJmKQenDEBt7V91EAsHebQ86w4n5Et0VV9JudvP7ArjMOd7GZA87TTBT4YkN0F115YSmeiyEtG/FGIW6lbuc3Eo4sNmGQY1nJQEGYKqM5PtiBfM6OU8n81ulN2g+QUpR1X8YNph31ymiqS4eHEWe4ttHaw+cBSzfZCMXC42+ZPbHpt6+NEJBzHRUWf3s9BF1Yyu583VqyJpTxGMWWQfGkAWJ80F+Hyq6WVvPoGuKw2sOzK2DHzv7wG8+F6bKQ7VGI7OfXUvDcKU89igkKih0JXJJbsEhQM/w3wbhewKsTHdmb3gcOPa6YezDM9l56e+nZaAcKfRvDyV2tel0/4wyQOb7taQHKEjIgZlX/iG5O1ea3Q4hBtf56aPTXveMN6J2S43LClPpcBIWFYUGrZDJRIA8mU2mU+M4CeOyH5gWqnhnRVxt3vCw+wtKBRms46/bw3z8H8PptfnpVwjNUUN1q01sprCC7l0MpyqrfpCVfmMCcGk6tATTvoZWLt0SN557CFhjLAeP2H2MzhfSreztntYxLpRWrydajO5K4YalM9XXINZCIh7VOfOlyvtI06rNbnAtKbNRV+R1bkNaDz+IYJY/YF0IxQF6wyta8KGkVcXWEj8dOAvSsTgpuvQ5sZwo5B7xZmVVggfUj8yCa36RW6Fs5IbYYQUYyY1QF45KvyFjnUk04yHxawnadjKMeDJ7pIgTQPzTjlhR0KkOrxm7PdA6NvOUNYcJRAaUcoQL4GJkDv1PtFdEt+kKzQnjw68EgmS8ojZi80u1DoAcbqMBuUigEcrF9JE0LKcwpZfEa83CyDV1zhsRQy1Gs+6DhNqJQ+rg+XeA7Ax9jJXcWEXluEfseAsgcyUSbnaVQExmAts+zug==";
+const ITER = 600000;
 const $ = id => document.getElementById(id);
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
-function hl(text, q){
-  if (!q) return esc(text);
-  const i = text.toLowerCase().indexOf(q);
-  return i < 0 ? esc(text) : esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+q.length)) + "</mark>" + esc(text.slice(i+q.length));
+async function decrypt(pw){
+  const raw = b64(PAYLOAD);
+  const salt = raw.slice(0, 16), iv = raw.slice(16, 28), ct = raw.slice(28);
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:ITER, hash:"SHA-256"},
+    base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const buf = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);   // 密碼錯誤時會丟出例外
+  return JSON.parse(new TextDecoder().decode(buf));
 }
 
-// 數字比對時，以原字串中的數字位置標示（忽略「-」）
-function hlNum(v, qd){
-  if (!qd) return esc(v);
-  const pos = []; for (let i = 0; i < v.length; i++) if (/\d/.test(v[i])) pos.push(i);
-  const d = pos.map(i => v[i]).join("");
-  const at = d.indexOf(qd);
-  if (at < 0) return esc(v);
-  const s = pos[at], e = pos[at + qd.length - 1] + 1;
-  return esc(v.slice(0,s)) + "<mark>" + esc(v.slice(s,e)) + "</mark>" + esc(v.slice(e));
-}
+// 欄位：[單位, 姓名/職稱, 分機, 手機, 市話(☎), 傳真, 備註]
+function start(D){
+  const split = s => (s || "").split("、").filter(Boolean);
+  const digits = s => s.replace(/\D/g, "");
 
-function numHit(n, qd){
-  if (!qd) return false;
-  if (n.d.includes(qd)) return true;
-  if (n.r && qd.length === n.r[0].length) return qd >= n.r[0] && qd <= n.r[1];
-  // 市話也可只輸入後 8 碼外加區碼 02
-  if (n.k === "☎" && qd.startsWith("02") && ("02" + n.d).includes(qd)) return true;
-  return false;
-}
+  // 把「638244-269」「8509-9210~12」「252265-8」展開成 [起, 迄] 數字區間
+  function range(tok){
+    let m = tok.match(/^(\d+)-(\d+)$/);            // 分機區間：638244-269
+    if (m && m[1].length >= 6 && m[2].length < m[1].length){
+      const a = m[1], b = a.slice(0, a.length - m[2].length) + m[2];
+      return [a, b];
+    }
+    m = tok.match(/^(\d{4})-(\d{4})~(\d+)$/);        // 市話區間：8509-9210~12
+    if (m){
+      const a = m[1] + m[2], b = a.slice(0, a.length - m[3].length) + m[3];
+      return [a, b];
+    }
+    return null;
+  }
 
-function render(){
-  const raw = $("q").value.trim();
-  const q = raw.toLowerCase();
-  const qd = digits(raw);
-  const isNum = qd.length > 0 && /^[\d\s\-()~+]+$/.test(raw);
-  $("clear").hidden = !raw;
-
-  const res = rows.filter(r => {
-    if (unitFilter && r.unit !== unitFilter) return false;
-    if (!raw) return true;
-    if (isNum) return r.nums.some(n => numHit(n, qd));
-    return r.text.includes(q);
+  const rows = D.map(([unit, name, ext, mob, tel, fax, note]) => {
+    const nums = [];
+    split(ext).forEach(v => nums.push({k:"分機", v}));
+    split(mob).forEach(v => nums.push({k:"手機", v, href:"tel:" + v}));
+    split(tel).forEach(v => nums.push({k:"☎", v, href: range(v) ? null : "tel:02" + digits(v)}));
+    split(fax).forEach(v => nums.push({k:"傳真", v}));
+    if (note){ const m = note.match(/急診\s*(\d+)/); if (m) nums.push({k:"急診", v:m[1]}); }
+    nums.forEach(n => { n.d = digits(n.v); n.r = range(n.v); });
+    return {unit, name, note, nums, text:(unit + name + (note || "")).toLowerCase()};
   });
 
-  const html = [];
-  let last = null;
-  res.forEach(r => {
-    if (!raw && r.unit !== last){ html.push(`<h2 id="u-${esc(r.unit)}">${esc(r.unit)}</h2>`); last = r.unit; }
-    const nums = r.nums.map(n => {
-      const hit = isNum && numHit(n, qd);
-      const v = hit ? hlNum(n.v, qd) : esc(n.v);
-      const inRange = hit && n.r && !n.d.includes(qd) ? ` <span class="k">含 ${esc(qd)}</span>` : "";
-      const body = `<span class="k">${n.k}</span>${v}${inRange}`;
-      return n.href ? `<a class="num" href="${n.href}">${body}</a>` : `<span class="num">${body}</span>`;
-    }).join("");
-    html.push(`<div class="card"><div class="top"><span class="name">${isNum ? esc(r.name) : hl(r.name, q)}</span>`
-      + `<span class="unit">${isNum ? esc(r.unit) : hl(r.unit, q)}</span></div>`
-      + `<div class="nums">${nums}</div>`
-      + (r.note ? `<div class="note">${isNum ? esc(r.note) : hl(r.note, q)}</div>` : "")
-      + `</div>`);
-  });
-  $("list").innerHTML = html.join("") || `<div class="empty">查無「${esc(raw)}」</div>`;
-  $("status").textContent = raw || unitFilter ? `找到 ${res.length} 筆` : `共 ${rows.length} 筆`;
-}
+  const units = [...new Set(D.map(r => r[0]))];
+  let unitFilter = "";
+  const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-$("chips").innerHTML = ["全部", ...units].map((u, i) =>
-  `<a class="chip" href="#${i ? "u-" + esc(u) : ""}" data-u="${i ? esc(u) : ""}" aria-pressed="${i === 0}">${esc(u)}</a>`).join("");
-$("search").hidden = false;
-$("chips").addEventListener("click", e => {
-  const b = e.target.closest(".chip"); if (!b) return;
-  e.preventDefault();
-  unitFilter = b.dataset.u;
-  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  function hl(text, q){
+    if (!q) return esc(text);
+    const i = text.toLowerCase().indexOf(q);
+    return i < 0 ? esc(text) : esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+q.length)) + "</mark>" + esc(text.slice(i+q.length));
+  }
+
+  // 數字比對時，以原字串中的數字位置標示（忽略「-」）
+  function hlNum(v, qd){
+    if (!qd) return esc(v);
+    const pos = []; for (let i = 0; i < v.length; i++) if (/\d/.test(v[i])) pos.push(i);
+    const d = pos.map(i => v[i]).join("");
+    const at = d.indexOf(qd);
+    if (at < 0) return esc(v);
+    const s = pos[at], e = pos[at + qd.length - 1] + 1;
+    return esc(v.slice(0,s)) + "<mark>" + esc(v.slice(s,e)) + "</mark>" + esc(v.slice(e));
+  }
+
+  function numHit(n, qd){
+    if (!qd) return false;
+    if (n.d.includes(qd)) return true;
+    if (n.r && qd.length === n.r[0].length) return qd >= n.r[0] && qd <= n.r[1];
+    // 市話也可只輸入後 8 碼外加區碼 02
+    if (n.k === "☎" && qd.startsWith("02") && ("02" + n.d).includes(qd)) return true;
+    return false;
+  }
+
+  function render(){
+    const raw = $("q").value.trim();
+    const q = raw.toLowerCase();
+    const qd = digits(raw);
+    const isNum = qd.length > 0 && /^[\d\s\-()~+]+$/.test(raw);
+    $("clear").hidden = !raw;
+
+    const res = rows.filter(r => {
+      if (unitFilter && r.unit !== unitFilter) return false;
+      if (!raw) return true;
+      if (isNum) return r.nums.some(n => numHit(n, qd));
+      return r.text.includes(q);
+    });
+
+    const html = [];
+    let last = null;
+    res.forEach(r => {
+      if (!raw && r.unit !== last){ html.push(`<h2 id="u-${esc(r.unit)}">${esc(r.unit)}</h2>`); last = r.unit; }
+      const nums = r.nums.map(n => {
+        const hit = isNum && numHit(n, qd);
+        const v = hit ? hlNum(n.v, qd) : esc(n.v);
+        const inRange = hit && n.r && !n.d.includes(qd) ? ` <span class="k">含 ${esc(qd)}</span>` : "";
+        const body = `<span class="k">${n.k}</span>${v}${inRange}`;
+        return n.href ? `<a class="num" href="${n.href}">${body}</a>` : `<span class="num">${body}</span>`;
+      }).join("");
+      html.push(`<div class="card"><div class="top"><span class="name">${isNum ? esc(r.name) : hl(r.name, q)}</span>`
+        + `<span class="unit">${isNum ? esc(r.unit) : hl(r.unit, q)}</span></div>`
+        + `<div class="nums">${nums}</div>`
+        + (r.note ? `<div class="note">${isNum ? esc(r.note) : hl(r.note, q)}</div>` : "")
+        + `</div>`);
+    });
+    $("list").innerHTML = html.join("") || `<div class="empty">查無「${esc(raw)}」</div>`;
+    $("status").textContent = raw || unitFilter ? `找到 ${res.length} 筆` : `共 ${rows.length} 筆`;
+  }
+
+  $("chips").innerHTML = ["全部", ...units].map((u, i) =>
+    `<a class="chip" href="#${i ? "u-" + esc(u) : ""}" data-u="${i ? esc(u) : ""}" aria-pressed="${i === 0}">${esc(u)}</a>`).join("");
+  $("search").hidden = false;
+  $("chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    e.preventDefault();
+    unitFilter = b.dataset.u;
+    document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+    render();
+  });
+  $("q").addEventListener("input", render);
+  $("clear").addEventListener("click", () => { $("q").value = ""; render(); $("q").focus(); });
+  $("lock").hidden = true;
+  $("hdr").hidden = false;
+  $("list").hidden = false;
   render();
-});
-$("q").addEventListener("input", render);
-$("clear").addEventListener("click", () => { $("q").value = ""; render(); $("q").focus(); });
-render();
+}
+
+async function tryUnlock(pw, silent){
+  const btn = $("unlock"), err = $("err");
+  btn.disabled = true; err.textContent = "";
+  try {
+    const D = await decrypt(pw);
+    try { sessionStorage.setItem("pb", pw); } catch(e){}
+    start(D);
+  } catch(e){
+    try { sessionStorage.removeItem("pb"); } catch(_){}
+    if (!silent){ err.textContent = "密碼錯誤"; $("pw").select(); }
+  } finally { btn.disabled = false; }
+}
+
+$("lock").addEventListener("submit", e => { e.preventDefault(); tryUnlock($("pw").value.trim()); });
+let saved = null; try { saved = sessionStorage.getItem("pb"); } catch(e){}
+if (saved) tryUnlock(saved, true);
 </script>
 </body>
 </html>
