@@ -70,6 +70,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;padding:0 16px 24px}
 .tools #btnSet{margin-left:auto}
 .msg{white-space:pre-line;font-size:13px;margin-top:6px;color:var(--accent)}
 .msg.bad{color:#c62828}
+.edate{font-size:13px;white-space:nowrap}.edate input{width:7.5em;padding:3px 6px}
 .card.edit{padding:10px 12px}
 .edit .erow{display:flex;gap:8px;margin-bottom:6px}
 .edit label,#tokbox label{flex:1;min-width:0;display:block;font-size:12px;color:var(--muted)}
@@ -102,7 +103,7 @@ dialog h3{margin:0 0 8px;font-size:17px}
   </div>
   <div class="tools">
     <button id="btnEdit" type="button">✎ 編輯</button>
-    <span id="ebar" hidden><button id="btnSave" type="button" class="pri">儲存</button><button id="btnCancel" type="button">取消</button><button id="btnAdd" type="button">＋新增一筆</button></span>
+    <span id="ebar" hidden><button id="btnSave" type="button" class="pri">儲存</button><button id="btnCancel" type="button">取消</button><button id="btnAdd" type="button">＋新增一筆</button><label class="edate">製表日期 <input id="edate" size="9" placeholder="115.11.17" autocomplete="off"></label></span>
     <button id="btnSet" type="button" aria-label="設定權杖" title="GitHub 權杖設定">⚙</button>
   </div>
   <div class="msg" id="msg" role="status" hidden></div>
@@ -306,11 +307,12 @@ function refresh(){
 const trimTail = r => { const a = r.map(x => String(x).trim()); while (a.length > 2 && a[a.length - 1] === "") a.pop(); return a; };
 const cleanList = list => list.map(trimTail).filter(r => r.some(Boolean));
 const regroup = list => { const order = []; list.forEach(r => { if (!order.includes(r[0])) order.push(r[0]); }); return order.flatMap(u => list.filter(r => r[0] === u)); };
-const dirty = () => JSON.stringify(regroup(cleanList(draft))) !== JSON.stringify(regroup(cleanList(D)));
+const dirty = () => JSON.stringify(regroup(cleanList(draft))) !== JSON.stringify(regroup(cleanList(D))) || $("edate").value.trim() !== meta.date;
 const say = (t, bad) => { const m = $("msg"); m.textContent = t || ""; m.className = "msg" + (bad ? " bad" : ""); m.hidden = !t; };
 
 function enterEdit(){
   draft = D.map(r => { const a = r.slice(0, 7); while (a.length < 7) a.push(""); return a; });
+  $("edate").value = meta.date;
   editing = true; say("");
   $("btnEdit").hidden = true; $("ebar").hidden = false; $("btnSet").hidden = false;
   document.body.classList.add("editing");
@@ -347,7 +349,7 @@ async function gh(t, method, body){
   return j;
 }
 
-async function pushOne(t, newPayload, newJson){
+async function pushOne(t, newPayload, newJson, date){
   const cur = await gh(t, "GET");
   const text = dec.decode(b64(cur.content));
   const m = text.match(PAY_RE), im = text.match(ITER_RE);
@@ -356,7 +358,7 @@ async function pushOne(t, newPayload, newJson){
   let remote;
   try { remote = await decryptPayload(m[1], PW); } catch(e){ throw new Error("遠端密碼與目前不同"); }
   const rj = JSON.stringify(remote.D);
-  if (rj === newJson) return "已是最新";
+  if (rj === newJson && remote.date === date) return "已是最新";
   if (rj !== baselineD) throw new Error("遠端資料已被別處更新，請重新整理後再編輯");
   const out = text.replace(PAY_RE, () => `const PAYLOAD = "${newPayload}";`);
   await gh(t, "PUT", {message:"更新電話資料（網頁編輯）", content:toB64(enc.encode(out)), sha:cur.sha, branch:t.branch});
@@ -374,19 +376,23 @@ async function save(){
   const bad = list.findIndex(r => !r[0] || !r[1]);
   if (bad >= 0){ say(`有資料缺少「單位」或「姓名」：${list[bad].filter(Boolean).join(" / ") || "（空白）"}`, true); return; }
   const newD = regroup(list), newJson = JSON.stringify(newD);
-  if (newJson === JSON.stringify(regroup(cleanList(D)))){ say("沒有變更"); leaveEdit(); return; }
+  const dataChanged = newJson !== JSON.stringify(regroup(cleanList(D)));
+  const typed = $("edate").value.trim();
+  if (typed && !/^d{2,3}.d{1,2}.d{1,2}$/.test(typed)){ say("製表日期格式應為 115.11.17", true); return; }
+  const dateChanged = typed !== meta.date;
+  if (!dataChanged && !dateChanged){ say("沒有變更"); leaveEdit(); return; }
   const targets = TARGETS.filter(t => getTok(t.repo));
   if (!targets.length){ say("尚未設定 GitHub 權杖，請先按 ⚙ 設定。", true); openSettings(); return; }
 
   saving = true; $("btnSave").disabled = true;
   try {
     say("加密中…");
-    const date = rocToday();
+    const date = dateChanged && typed ? typed : rocToday();
     const newPayload = await encryptPayload({date, D:newD}, PW);
     const lines = [], fails = [];
     for (const t of targets){
       say(`寫入 ${t.repo} …`);
-      try { lines.push(`${t.repo}：${await pushOne(t, newPayload, newJson)}`); }
+      try { lines.push(`${t.repo}：${await pushOne(t, newPayload, newJson, date)}`); }
       catch(e){ fails.push(`${t.repo}：${e.message}`); }
     }
     const skipped = TARGETS.filter(t => !getTok(t.repo)).map(t => t.repo + "：未設定權杖，已略過");
